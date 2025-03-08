@@ -4,8 +4,6 @@ import { Component } from '@angular/core';
   selector: 'app-songs-library',
   imports: [],
   templateUrl: './songs-library.component.html',
-  styleUrl: './songs-library.component.scss'
+  styleUrl: './songs-library.component.scss',
 })
-export class SongsLibraryComponent {
-
-}
+export class SongsLibraryComponent {}
