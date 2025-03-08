@@ -1,1 +1,15 @@
-<p>song-card works!</p>
+<p>{{ song.title }}</p>
+<p>{{ song.id }}</p>
+<p>{{ song.artist }}</p>
+<p>{{ song.price }}</p>
+<p>{{ song.releaseDate | date }}</p>
+<ul>
+  <li>
+    <a [routerLink]="['update', song.id]">
+      <button>Update</button>
+    </a>
+  </li>
+  <li>
+    <button>Delete</button>
+  </li>
+</ul>

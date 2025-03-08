@@ -1,1 +1,10 @@
-<p>songs-library works!</p>
+<app-songs-header />
+<main>
+  <ul>
+    @for (song of songList; track song.id) {
+      <li>
+        <app-song-card [song]="song" />
+      </li>
+    }
+  </ul>
+</main>
