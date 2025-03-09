@@ -1,5 +1,10 @@
+html,
+body {
+  height: 100%;
+}
 body {
   margin: 0;
+  font-family: var(--regular-font);
 }
 
 // Colors
@@ -62,4 +67,10 @@ button.app-btn {
       color: #000;
     }
   }
+}
+
+.mat-datepicker-content-container {
+  background-color: white;
+  border: 2px solid var(--highlight-green-color);
+  border-radius: 5px;
 }

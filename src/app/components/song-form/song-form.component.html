@@ -1,10 +1,26 @@
+<h2>Add a new song to your list</h2>
 <form action="">
-  <label for="title">Title</label>
-  <input type="text" name="title" id="title" placeholder="Billy Jean" />
-  <label for="artist">Artist</label>
-  <input type="text" name="artist" id="artist" placeholder="Michael Jackson" />
-  <label for="releaseDate">Release Date</label>
-  <input type="text" name="releaseDate" id="releaseDate" placeholder="April 8th 1983" />
-  <label for="price">Price</label>
-  <input type="text" name="price" id="price" placeholder="3.99" />
+  <mat-form-field class="full-width">
+    <mat-label>Title</mat-label>
+    <input matInput type="text" name="title" id="title" placeholder="Billy Jean" />
+  </mat-form-field>
+  <mat-form-field class="full-width">
+    <mat-label for="artist">Artist</mat-label>
+    <input matInput type="text" name="artist" id="artist" placeholder="Michael Jackson" />
+  </mat-form-field>
+  <mat-form-field class="full-width">
+    <mat-label>Release Date</mat-label>
+    <input matInput [matDatepicker]="picker" />
+    <mat-hint>MM/DD/YYYY</mat-hint>
+    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+  <mat-form-field class="full-width">
+    <mat-label for="artist">Price</mat-label>
+    <input matInput type="number" name="price" id="price" placeholder="3.99" />
+  </mat-form-field>
+  <ul class="actions-list">
+    <button class="app-btn danger">Cancel</button>
+    <button class="app-btn">Save</button>
+  </ul>
 </form>
