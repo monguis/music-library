@@ -1,1 +1,65 @@
-/* You can add global styles to this file, and also import other style files */
+body {
+  margin: 0;
+}
+
+// Colors
+:root {
+  --primary-color: #3498db;
+  --highlight-green-color: #00793a;
+  --highlight-red-color: #8b0000;
+  --bg-dark-blue: #1a2944;
+}
+
+// Sizes
+:root {
+  --content-width-lg: 80vw;
+}
+
+// Fonts
+:root {
+  --headline-font: Cabin, sans-serif;
+  --regular-font: Inter, sans-serif;
+}
+
+a,
+li,
+li a,
+p,
+p a {
+  font-family: var(--regular-font);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--headline-font);
+}
+
+h2 {
+  font-size: 36px;
+
+  margin-bottom: 25px;
+  color: var(--highlight-green-color);
+}
+
+button.app-btn {
+  cursor: pointer;
+  color: white;
+  font-size: 1rem;
+  background-color: var(--highlight-green-color);
+  padding: 0.7rem 1rem;
+  &:hover {
+    background-color: hsl(0, 0%, 100%);
+    color: #1e2859;
+    border: 2px solid var(--highlight-green-color);
+  }
+  &.danger {
+    background-color: var(--highlight-red-color);
+    border: 2px solid var(--highlight-red-color);
+    &:hover {
+      background-color: hsl(0, 0%, 100%);
+      color: #000;
+    }
+  }
+}

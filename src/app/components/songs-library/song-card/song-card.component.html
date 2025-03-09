@@ -1,15 +1,21 @@
-<p>{{ song.title }}</p>
-<p>{{ song.id }}</p>
-<p>{{ song.artist }}</p>
-<p>{{ song.price }}</p>
-<p>{{ song.releaseDate | date }}</p>
-<ul>
-  <li>
-    <a [routerLink]="['update', song.id]">
-      <button>Update</button>
-    </a>
-  </li>
-  <li>
-    <button>Delete</button>
-  </li>
-</ul>
+<div class="info">
+  <div class="info__song-info">
+    <p class="info__song-info__title">Title: {{ song.title }}</p>
+    <p class="info__song-info__artist">Artist: {{ song.artist }}</p>
+    <p class="info__song-info__release-date">Released in: {{ song.releaseDate | date }}</p>
+  </div>
+  <div class="info__internal-info">
+    <p class="info__internal-info__id">ID: {{ song.id }}</p>
+    <p class="info__internal-info__price">Price: {{ song.price | currency }}</p>
+  </div>
+</div>
+<div class="actions">
+  <ul class="actions__list">
+    <li>
+      <button class="app-btn" [routerLink]="['update', song.id]">Update</button>
+    </li>
+    <li>
+      <button class="app-btn danger">Delete</button>
+    </li>
+  </ul>
+</div>

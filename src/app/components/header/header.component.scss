@@ -1,0 +1,26 @@
+.menu-nav {
+  line-height: 1rem;
+  display: flex;
+  margin: 0;
+  align-items: center;
+  max-width: var(--content-width-lg);
+  justify-content: space-between;
+  &__header-button-list {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    list-style: none;
+    li > a {
+      color: white;
+      text-decoration: none;
+    }
+  }
+  &__title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    & > a {
+      color: white;
+      text-decoration: none;
+    }
+  }
+}

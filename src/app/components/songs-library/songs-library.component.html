@@ -1,10 +1,23 @@
-<app-songs-header />
-<main>
-  <ul>
+<section class="song-list-page">
+  <h2>Song list</h2>
+
+  <div class="song-list-page__options">
+    <ul class="song-list-page__options__list">
+      <li class="filter-item">
+        <button class="app-btn">Filter by date</button>
+      </li>
+      @for (item of sortTiles; track $index) {
+        <li>
+          <button class="app-btn">Sort by {{ item }}</button>
+        </li>
+      }
+    </ul>
+  </div>
+  <ul class="song-list-page__song-list">
     @for (song of songList; track song.id) {
       <li>
-        <app-song-card [song]="song" />
+        <article class="song-card" [song]="song"></article>
       </li>
     }
   </ul>
-</main>
+</section>

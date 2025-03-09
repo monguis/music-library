@@ -1,11 +1,11 @@
 import { Component, Input } from '@angular/core';
-import { Song } from '../../../models/model';
-import { DatePipe } from '@angular/common';
+import { CurrencyPipe, DatePipe } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { Song } from '../../../models/model';
 
 @Component({
-  selector: 'app-song-card',
-  imports: [DatePipe, RouterModule],
+  selector: 'article.song-card',
+  imports: [DatePipe, CurrencyPipe, RouterModule],
   templateUrl: './song-card.component.html',
   styleUrl: './song-card.component.scss',
 })

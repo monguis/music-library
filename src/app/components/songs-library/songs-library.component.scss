@@ -1,0 +1,19 @@
+.song-list-page {
+  &__options {
+    &__list {
+      display: flex;
+      list-style: none;
+      gap: 0.5rem;
+      padding: 0;
+      justify-content: right;
+      & .filter-item {
+        flex-grow: 1;
+      }
+    }
+  }
+
+  &__song-list {
+    list-style: none;
+    padding: 0;
+  }
+}

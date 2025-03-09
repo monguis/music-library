@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { SongsLibraryComponent } from './components/songs-library/songs-library.component';
-import { SongFormComponent } from './components/songs-library/song-form/song-form.component';
+import { SongFormComponent } from './components/song-form/song-form.component';
 
 export const routes: Routes = [
   { component: SongsLibraryComponent, path: '' },
