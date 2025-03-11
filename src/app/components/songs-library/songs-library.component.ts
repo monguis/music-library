@@ -5,6 +5,9 @@ import { SongCardComponent } from './song-card/song-card.component';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { FilterSongPipe } from '../../pipes/filtersong.pipe';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
+import { MessageStatus, NotificationsService } from '../../services/notifications/notifications.service';
 
 interface FilterOptions {
   from?: string;
@@ -21,16 +24,18 @@ export class SongsLibraryComponent implements OnInit, OnDestroy {
   public songList: SongModel[] = [];
   public sortTiles: string[] = [];
   public filterOptions: FilterOptions = {};
-  private songsSubscription?: Subscription;
   private paramsSubcription?: Subscription;
+  private songsSubcription?: Subscription;
 
   constructor(
     private songsService: SongsService,
-    private route: ActivatedRoute
+    private notificationService: NotificationsService,
+    private route: ActivatedRoute,
+    private readonly dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
-    this.songsSubscription = this.songsService.getAllSongs().subscribe(newList => {
+    this.songsSubcription = this.songsService.songsList$.subscribe(newList => {
       if (newList?.length > 0) {
         this.songList = newList;
         this.sortTiles = Object.keys(this.songList[0]);
@@ -43,10 +48,33 @@ export class SongsLibraryComponent implements OnInit, OnDestroy {
         until: params['filter-until'],
       };
     });
+
+    this.songsService.getAllSongs().subscribe();
   }
 
   ngOnDestroy(): void {
-    this.songsSubscription?.unsubscribe();
     this.paramsSubcription?.unsubscribe();
+    this.songsSubcription?.unsubscribe();
+  }
+
+  onDelete(id: string) {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '250px',
+      data: {
+        title: 'You are bout to delete a Song.',
+        message: 'Do you want to continue?',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === 'confirm') {
+        this.songsService.deleteSong(id).subscribe(() => {
+          this.notificationService.pushNotification({
+            status: MessageStatus.SUCCESS,
+            message: `Song ID: ${id} has been deleted successfully`,
+          });
+        });
+      }
+    });
   }
 }

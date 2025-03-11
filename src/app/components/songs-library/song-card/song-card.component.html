@@ -15,7 +15,7 @@
       <button class="app-btn" [routerLink]="['update', song.id]">Update</button>
     </li>
     <li>
-      <button class="app-btn danger">Delete</button>
+      <button class="app-btn danger" (click)="handleDelete()">Delete</button>
     </li>
   </ul>
 </div>

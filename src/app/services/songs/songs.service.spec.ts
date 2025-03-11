@@ -34,16 +34,15 @@ describe('SongsService', () => {
 
   it('create an instance', () => {
     expect(songService).toBeTruthy();
-    expect(songService.getforceReloadAllSongs).toBe(true);
   });
 
   it('fetches songs from the API if force reload is required', () => {
     songService.getAllSongs().subscribe(songs => {
-      expect(songs.length).toBe(3);
-      expect(songs[0].title).toBe('Blinding Lights');
-      expect(songs[1].title).toBe('Shape of You');
-      expect(songs[2].title).toBe('Levitating');
-      expect(songs[0] instanceof SongModel).toBeTrue();
+      expect(songService['songList'].length).toBe(3);
+      expect(songService['songList'][0].title).toBe('Blinding Lights');
+      expect(songService['songList'][1].title).toBe('Shape of You');
+      expect(songService['songList'][2].title).toBe('Levitating');
+      expect(songService['songList'][0] instanceof SongModel).toBeTrue();
     });
 
     const req = httpMock.expectOne(songService['songsApiURL']);
@@ -51,25 +50,15 @@ describe('SongsService', () => {
     req.flush(MOCK_LIST);
   });
 
-  it('fetches songs from memory if force reload is not required', () => {
-    songService['songList'] = MOCK_LIST;
-    songService.setForceReloadAllSongs(false);
-
-    songService.getAllSongs().subscribe(songs => {
-      expect(songs.length).toBe(3);
-      expect(songs[0].title).toBe('Blinding Lights');
-      expect(songs[1].title).toBe('Shape of You');
-      expect(songs[2].title).toBe('Levitating');
-    });
-  });
-
   it('creates a new song', () => {
     const songDto = { ...SongModel.toDto(MOCK_LIST[0]), id: undefined };
-    const newSong = new SongModel(songDto);
 
-    songService.createSong(songDto).subscribe(response => {
-      expect(response).toEqual(newSong);
-    });
+    songService.addSong(songDto).subscribe(() =>
+      songService.songsList$.subscribe(list => {
+        expect(list.length).toBe(1);
+        expect(list[0].title).toBe(songDto.title);
+      })
+    );
 
     const req = httpMock.expectOne(songService['songsApiURL']);
     expect(req.request.method).toBe('POST');
@@ -78,39 +67,39 @@ describe('SongsService', () => {
 
   it('updates an existing song', () => {
     const songDto = SongModel.toDto(MOCK_LIST[0]);
-    const updatedSong = new SongModel(songDto);
+    const newTitle = 'la cucaracha';
+    const updatedSong = { ...songDto, title: newTitle };
 
-    songService.updateSong('1', songDto).subscribe(response => {
-      expect(response).toEqual(updatedSong);
-    });
+    songService['songList'] = [MOCK_LIST[0]];
+
+    songService.updateSong('1', updatedSong).subscribe(() =>
+      songService.songsList$.subscribe(list => {
+        expect(list.length).toBe(1);
+        expect(list[0].title).toBe(newTitle);
+      })
+    );
 
     const req = httpMock.expectOne(`${songService['songsApiURL']}/${songDto.id!}`);
     expect(req.request.method).toBe('PUT');
-    req.flush(songDto);
-  });
-
-  it('gets a song by id', () => {
-    const songDto = { ...SongModel.toDto(MOCK_LIST[0]) };
-    const fetchedSong = new SongModel(songDto);
-
-    songService.getSong(songDto.id!).subscribe(response => {
-      expect(response).toEqual(fetchedSong);
-    });
-
-    const req = httpMock.expectOne(`${songService['songsApiURL']}/${songDto.id!}`);
-    expect(req.request.method).toBe('GET');
-    req.flush(songDto);
+    req.flush(updatedSong);
   });
 
   it('deletes a song by id', () => {
     const idToDelete = '1';
-    songService.deleteSong(idToDelete).subscribe(response => {
-      expect(response).toBeNull();
-    });
+    const songToDelete = MOCK_LIST[0];
+
+    songService['songList'] = [songToDelete];
+
+    songService.deleteSong(idToDelete).subscribe(() =>
+      songService.songsList$.subscribe(list => {
+        expect(list.length).toBe(0);
+        expect(songService['songList'].length).toBe(0);
+      })
+    );
 
     const req = httpMock.expectOne(`${songService['songsApiURL']}/${idToDelete}`);
     expect(req.request.method).toBe('DELETE');
-    req.flush(null);
+    req.flush(songToDelete);
   });
 
   it('handles 404s errors and pushes the correct notification', () => {
