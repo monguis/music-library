@@ -1,8 +1,8 @@
-import { Song } from '../models/model';
+import { SongModel } from '../models/song';
 import { FilterSongPipe } from './filtersong.pipe';
 
 describe('FiltersongPipe', () => {
-  const testData: Song[] = [
+  const testData: SongModel[] = [
     { artist: 'Nirvana', title: 'Smells Like Teen Spirit', id: '2', price: 6, releaseDate: new Date('09-24-1991') },
     { artist: 'Taylor Swift', title: 'Shake It Off', id: '4', price: 7, releaseDate: new Date('08-18-2014') },
     { artist: 'Adele', title: 'Hello', id: '3', price: 8, releaseDate: new Date('10-23-2015') },

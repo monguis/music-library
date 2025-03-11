@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { Song } from '../../../models/model';
+import { SongModel } from '../../../models/song';
 
 @Component({
   selector: 'article.song-card',
@@ -10,5 +10,5 @@ import { Song } from '../../../models/model';
   styleUrl: './song-card.component.scss',
 })
 export class SongCardComponent {
-  @Input({ required: true }) public song!: Song;
+  @Input({ required: true }) public song!: SongModel;
 }

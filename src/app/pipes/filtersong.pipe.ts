@@ -1,12 +1,12 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Song } from '../models/model';
+import { SongModel } from '../models/song';
 import { stringToDate } from '../helpers/dates';
 
 @Pipe({
   name: 'filterSongs',
 })
 export class FilterSongPipe implements PipeTransform {
-  transform(songs: Song[], releaseFrom?: string, releaseUntil?: string): Song[] {
+  transform(songs: SongModel[], releaseFrom?: string, releaseUntil?: string): SongModel[] {
     if (!songs) return [];
 
     const from = stringToDate(releaseFrom);

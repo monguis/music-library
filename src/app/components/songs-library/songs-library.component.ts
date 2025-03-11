@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { SongsService } from '../../services/songs/songs.service';
-import { Song } from '../../models/model';
+import { SongModel } from '../../models/song';
 import { SongCardComponent } from './song-card/song-card.component';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, RouterModule } from '@angular/router';
@@ -18,7 +18,7 @@ interface FilterOptions {
   styleUrl: './songs-library.component.scss',
 })
 export class SongsLibraryComponent implements OnInit, OnDestroy {
-  public songList: Song[] = [];
+  public songList: SongModel[] = [];
   public sortTiles: string[] = [];
   public filterOptions: FilterOptions = {};
   private songsSubscription?: Subscription;
@@ -30,13 +30,12 @@ export class SongsLibraryComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.songsSubscription = this.songsService.songList$.subscribe(newList => {
+    this.songsSubscription = this.songsService.getAllSongs().subscribe(newList => {
       if (newList?.length > 0) {
         this.songList = newList;
         this.sortTiles = Object.keys(this.songList[0]);
       }
     });
-    this.songsService.getAllSongs();
 
     this.paramsSubcription = this.route.queryParams.subscribe(params => {
       this.filterOptions = {
