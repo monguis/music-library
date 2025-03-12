@@ -1,5 +1,5 @@
 import { SongModel } from '../models/song';
-import { FilterSongPipe } from './filtersong.pipe';
+import { FilterSongPipe } from './filter-songs.pipe';
 
 describe('FiltersongPipe', () => {
   const testData: SongModel[] = [

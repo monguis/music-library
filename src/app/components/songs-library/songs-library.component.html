@@ -14,9 +14,9 @@
     </ul>
   </div>
   <ul class="song-list-page__song-list">
-    @for (song of songList | filterSongs: filterOptions.from : filterOptions.until; track song.id) {
+    @for (song of songList | filterSongs: filterOptions.from : filterOptions.until | sortGeneric: 'releaseDate' : 'desc'; track song.id) {
       <li>
-        <article class="song-card" [song]="song" (delete)="onDelete($event)"></article>
+        <article class="song-card" [song]="song" (delete)="onDelete($event)" (update)="onUpdate($event)"></article>
       </li>
     }
   </ul>

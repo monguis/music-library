@@ -33,7 +33,7 @@
       }
     </mat-form-field>
     <ul class="actions-list">
-      <button class="app-btn danger">Cancel</button>
+      <button class="app-btn danger" (click)="onCancel()" type="button">Cancel</button>
       <button class="app-btn" type="submit" [disabled]="!songForm.valid">{{ mode }} Song</button>
     </ul>
   </form>

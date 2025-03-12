@@ -1,26 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { ActivatedRoute } from '@angular/router';
-import { SongModel } from '../../models/song';
+import { ActivatedRoute, Router } from '@angular/router';
+import { SongDto, SongModel } from '../../models/song';
+import { SongsService } from '../../services/songs/songs.service';
+import { MessageStatus, NotificationsService } from '../../services/notifications/notifications.service';
+import { Location } from '@angular/common';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
 
 type songFormMode = 'create' | 'update';
-export function validDateValidator(control: AbstractControl): ValidationErrors | null {
-  if (!control.value) return null; // Ignore empty values (handled by 'required')
 
-  // Ensure the value is a valid Date instance or a valid date string
-  const date = new Date(control.value);
-
-  // Check if it's an invalid date
-  if (isNaN(date.getTime())) {
-    return { invalidDate: true };
-  }
-
-  return null; // No errors
-}
 @Component({
   selector: 'app-song-form',
   imports: [MatFormFieldModule, MatInputModule, MatDatepickerModule, ReactiveFormsModule],
@@ -31,23 +24,39 @@ export function validDateValidator(control: AbstractControl): ValidationErrors |
 export class SongFormComponent implements OnInit {
   public songForm!: FormGroup;
   public mode: songFormMode = 'create';
-  public currentSong?: SongModel;
+  public songSnapshot: SongModel | null = null;
+  private currentSongId = '';
 
   constructor(
+    private songsService: SongsService,
     private fb: FormBuilder,
-    private route: ActivatedRoute
+    private notificationService: NotificationsService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private location: Location,
+    private readonly dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
     if (this.route.snapshot.url[0].path === 'update') {
       this.mode = 'update';
+      this.songSnapshot = this.songsService.getSongToUpdate();
+      this.currentSongId = this.route.snapshot.url[1].path;
+
+      if (!this.songSnapshot && this.currentSongId) {
+        this.notificationService.pushNotification({
+          message: `Song could not be found`,
+          status: MessageStatus.SUCCESS,
+        });
+        this.router.navigate(['/']);
+      }
     }
 
     this.songForm = this.fb.group({
-      title: [this.mode === 'update' ? this.currentSong?.title : '', [Validators.required, Validators.maxLength(25)]],
-      artist: [this.mode === 'update' ? this.currentSong?.artist : '', [Validators.required, Validators.maxLength(25)]],
-      releaseDate: [this.mode === 'update' ? this.currentSong?.releaseDate : '', [Validators.required, validDateValidator]],
-      price: [this.mode === 'update' ? this.currentSong?.price : 0, [Validators.required, Validators.min(0.01)]],
+      title: [this.mode === 'update' ? this.songSnapshot?.title : '', [Validators.required, Validators.maxLength(25)]],
+      artist: [this.mode === 'update' ? this.songSnapshot?.artist : '', [Validators.required, Validators.maxLength(25)]],
+      releaseDate: [this.mode === 'update' ? this.songSnapshot?.releaseDate : '', [Validators.required]],
+      price: [this.mode === 'update' ? this.songSnapshot?.price : 0, [Validators.required, Validators.min(0.01)]],
     });
   }
 
@@ -77,7 +86,69 @@ export class SongFormComponent implements OnInit {
     return '';
   }
 
+  onCancel() {
+    if (this.mode === 'update' && this.songForm.valid) {
+      const currentValues = this.songForm.value as SongModel;
+
+      if (!this.songSnapshot?.equals(currentValues)) {
+        const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+          width: '250px',
+          data: {
+            title: 'You are about to udpate a Song.',
+            message: 'Do you want to continue?',
+          },
+        });
+        dialogRef.afterClosed().subscribe(result => {
+          if (result === 'confirm') {
+            this.location.back();
+          }
+        });
+      }
+    } else {
+      this.location.back();
+    }
+  }
+
   submitForm() {
-    console.log(this.songForm.value);
+    if (!this.songForm.valid) return;
+
+    const songDtoToSend = {
+      ...this.songForm.value,
+      release_date: this.songForm.value.releaseDate.toISOString(),
+    } as SongDto;
+
+    if (this.mode === 'update') {
+      const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+        width: '250px',
+        data: {
+          title: 'You are about to udpate a Song.',
+          message: 'Do you want to continue?',
+        },
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result === 'confirm') {
+          this.songsService.updateSong(this.currentSongId, songDtoToSend).subscribe(newSong => {
+            this.songsService.updateLocalList(this.currentSongId, newSong);
+            this.notificationService.pushNotification({
+              message: `Song ID: ${this.currentSongId} has been updated successfully`,
+              status: MessageStatus.SUCCESS,
+            });
+            this.router.navigate(['/']);
+          });
+        }
+      });
+
+      return;
+    }
+
+    this.songsService.addSong(songDtoToSend).subscribe(newSong => {
+      this.songsService.addSongToLocalList(newSong);
+      this.notificationService.pushNotification({
+        message: 'Song was added successfully',
+        status: MessageStatus.SUCCESS,
+      });
+      this.router.navigate(['/']);
+    });
   }
 }

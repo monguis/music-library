@@ -3,11 +3,12 @@ import { SongsService } from '../../services/songs/songs.service';
 import { SongModel } from '../../models/song';
 import { SongCardComponent } from './song-card/song-card.component';
 import { Subscription } from 'rxjs';
-import { ActivatedRoute, RouterModule } from '@angular/router';
-import { FilterSongPipe } from '../../pipes/filtersong.pipe';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { FilterSongPipe } from '../../pipes/filter-songs.pipe';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
 import { MessageStatus, NotificationsService } from '../../services/notifications/notifications.service';
+import { SortGenericPipe } from '../../pipes/sort-songs.pipe';
 
 interface FilterOptions {
   from?: string;
@@ -16,7 +17,7 @@ interface FilterOptions {
 
 @Component({
   selector: 'app-songs-library',
-  imports: [SongCardComponent, RouterModule, FilterSongPipe],
+  imports: [SongCardComponent, RouterModule, FilterSongPipe, SortGenericPipe],
   templateUrl: './songs-library.component.html',
   styleUrl: './songs-library.component.scss',
 })
@@ -31,7 +32,8 @@ export class SongsLibraryComponent implements OnInit, OnDestroy {
     private songsService: SongsService,
     private notificationService: NotificationsService,
     private route: ActivatedRoute,
-    private readonly dialog: MatDialog
+    private readonly dialog: MatDialog,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -49,7 +51,9 @@ export class SongsLibraryComponent implements OnInit, OnDestroy {
       };
     });
 
-    this.songsService.getAllSongs().subscribe();
+    this.songsService.getAllSongs().subscribe(songs => {
+      this.songsService.assingSongsToList(songs);
+    });
   }
 
   ngOnDestroy(): void {
@@ -69,12 +73,21 @@ export class SongsLibraryComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe(result => {
       if (result === 'confirm') {
         this.songsService.deleteSong(id).subscribe(() => {
+          this.songsService.removeSongFromLocalList(id);
           this.notificationService.pushNotification({
             status: MessageStatus.SUCCESS,
             message: `Song ID: ${id} has been deleted successfully`,
           });
         });
       }
+    });
+  }
+
+  onUpdate(id: string) {
+    this.songsService.getSong(id).subscribe(song => {
+      this.songsService.setSongForEdit(song);
+
+      this.router.navigate(['update', id]);
     });
   }
 }

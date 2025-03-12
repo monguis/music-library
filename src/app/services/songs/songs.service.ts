@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { SongModel, SongDto } from '../../models/song';
-import { BehaviorSubject, catchError, map, Observable, tap, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, finalize, map, Observable, tap, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { MessageStatus, NotificationsService } from '../notifications/notifications.service';
@@ -11,6 +11,8 @@ import { MessageStatus, NotificationsService } from '../notifications/notificati
 export class SongsService {
   private songsApiURL = environment.songsApiUrl + '/songs';
   private songList: SongModel[] = [];
+  private songToUpdate?: SongModel;
+  public loading$ = new BehaviorSubject<boolean>(false);
   public songsList$ = new BehaviorSubject<SongModel[]>(this.songList);
 
   constructor(
@@ -18,63 +20,71 @@ export class SongsService {
     private notificationService: NotificationsService
   ) {}
 
-  private httpErrorHandler = (error: any) => {
-    let message = 'Unknown server error';
-    switch (error.status) {
-      case 404:
-        message = 'Content not found';
-        break;
-      case 500:
-        message = 'Internal server error';
-        break;
-    }
-    this.notificationService.pushNotification({
-      message,
-      status: MessageStatus.ERROR,
-    });
-    return throwError(() => error);
-  };
+  assingSongsToList(newSongs: SongModel[]) {
+    this.songList = newSongs;
+    this.songsList$.next(newSongs);
+  }
 
-  getAllSongs(): Observable<void> {
+  addSongToLocalList(newSong: SongModel) {
+    const newList = [...this.songList, newSong];
+    this.songList = newList;
+    this.songsList$.next(newList);
+  }
+
+  updateLocalList(id: string, newSong: SongModel) {
+    const newList = this.songList.map(song => (song.id === id ? newSong : song));
+    this.songList = newList;
+    this.songsList$.next(newList);
+  }
+
+  removeSongFromLocalList(id: string) {
+    const newList = this.songList.filter(song => song.id !== id);
+    this.songList = newList;
+    this.songsList$.next(newList);
+  }
+
+  getSongToUpdate() {
+    return this.songToUpdate ? new SongModel(SongModel.toDto(this.songToUpdate)) : null;
+  }
+
+  getAllSongs(): Observable<SongModel[]> {
+    this.loading$.next(true);
     return this.http.get<SongDto[]>(this.songsApiURL).pipe(
-      map(songDtos => {
-        const newSongList = songDtos.map(dto => new SongModel(dto));
-        this.songsList$.next(newSongList);
-        this.songList = newSongList;
-      }),
-      catchError(this.httpErrorHandler)
+      map(songDtos => songDtos.map(dto => new SongModel(dto))),
+      finalize(() => this.loading$.next(false))
+    );
+  }
+
+  setSongForEdit(song: SongModel) {
+    this.songToUpdate = song;
+  }
+
+  getSong(id: string): Observable<SongModel> {
+    this.loading$.next(true);
+    return this.http.get<SongDto>(`${this.songsApiURL}/${id}`).pipe(
+      map(songDto => new SongModel(songDto)),
+      finalize(() => this.loading$.next(false))
     );
   }
 
   addSong(song: SongDto): Observable<SongModel> {
+    this.loading$.next(true);
     return this.http.post<SongDto>(this.songsApiURL, song).pipe(
       map(songDto => new SongModel(songDto)),
-      catchError(this.httpErrorHandler),
-      tap(newSong => {
-        this.songList = [...this.songList, newSong];
-        this.songsList$.next(this.songList);
-      })
+      finalize(() => this.loading$.next(false))
     );
   }
 
   updateSong(id: string, song: SongDto): Observable<SongModel> {
+    this.loading$.next(true);
     return this.http.put<SongDto>(`${this.songsApiURL}/${id}`, song).pipe(
       map(songDto => new SongModel(songDto)),
-      catchError(this.httpErrorHandler),
-      tap(newSong => {
-        this.songList = this.songList.map(song => (song.id === id ? newSong : song));
-        this.songsList$.next(this.songList);
-      })
+      finalize(() => this.loading$.next(false))
     );
   }
 
   deleteSong(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.songsApiURL}/${id}`).pipe(
-      catchError(this.httpErrorHandler),
-      tap(() => {
-        this.songList = this.songList.filter(song => song.id !== id);
-        this.songsList$.next(this.songList);
-      })
-    );
+    this.loading$.next(true);
+    return this.http.delete<void>(`${this.songsApiURL}/${id}`).pipe(finalize(() => this.loading$.next(false)));
   }
 }

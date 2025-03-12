@@ -13,8 +13,13 @@ import { SongModel } from '../../../models/song';
 export class SongCardComponent {
   @Input({ required: true }) public song!: SongModel;
   @Output() public delete = new EventEmitter<string>();
+  @Output() public update = new EventEmitter<string>();
 
   handleDelete() {
     this.delete.emit(this.song.id);
+  }
+
+  handleUpdate() {
+    this.update.emit(this.song.id);
   }
 }

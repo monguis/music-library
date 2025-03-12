@@ -13,6 +13,10 @@ export class SongModel {
     this.price = dto.price;
   }
 
+  copy() {
+    return new SongModel(SongModel.toDto(this));
+  }
+
   static toDto(song: SongModel): SongDto {
     return {
       id: song.id,
@@ -21,6 +25,16 @@ export class SongModel {
       release_date: song.releaseDate.toISOString(),
       price: song.price,
     };
+  }
+
+  public equals(song: SongModel): boolean {
+    return (
+      song.id === this.id &&
+      song.title === this.title &&
+      song.artist === this.artist &&
+      song.releaseDate.toISOString() === this.releaseDate.toISOString() &&
+      song.price === this.price
+    );
   }
 }
 

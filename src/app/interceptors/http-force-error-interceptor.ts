@@ -1,0 +1,17 @@
+import { HttpRequest, HttpHandlerFn, HttpInterceptorFn } from '@angular/common/http';
+import { of, throwError } from 'rxjs';
+import { mergeMap } from 'rxjs/operators';
+
+export const httpForceError: HttpInterceptorFn = (req: HttpRequest<unknown>, next: HttpHandlerFn) => {
+  return next(req).pipe(
+    mergeMap(resp => {
+      const randomValue = Math.floor(Math.random() * 5);
+
+      if (randomValue < 1) {
+        return throwError(() => new Error('Unknown error occurred'));
+      }
+
+      return of(resp);
+    })
+  );
+};

@@ -1,14 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 import { SongsService } from './songs.service';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { MessageStatus, NotificationsService } from '../notifications/notifications.service';
 import { SongModel } from '../../models/song';
 import { provideHttpClient } from '@angular/common/http';
 
 describe('SongsService', () => {
   let songService: SongsService;
   let httpMock: HttpTestingController;
-  let notificationsService: jasmine.SpyObj<NotificationsService>;
   const MOCK_LIST = [
     new SongModel({ id: '1', title: 'Blinding Lights', artist: 'The Weeknd', release_date: '2019-11-29', price: 12 }),
     new SongModel({ id: '2', title: 'Shape of You', artist: 'Ed Sheeran', release_date: '2017-01-06', price: 15 }),
@@ -16,16 +14,13 @@ describe('SongsService', () => {
   ];
 
   beforeEach(() => {
-    const notificationsSpy = jasmine.createSpyObj('NotificationsService', ['pushNotification']);
-
     TestBed.configureTestingModule({
       imports: [],
-      providers: [SongsService, { provide: NotificationsService, useValue: notificationsSpy }, provideHttpClient(), provideHttpClientTesting()],
+      providers: [SongsService, provideHttpClient(), provideHttpClientTesting()],
     });
 
     songService = TestBed.inject(SongsService);
     httpMock = TestBed.inject(HttpTestingController);
-    notificationsService = TestBed.inject(NotificationsService) as jasmine.SpyObj<NotificationsService>;
   });
 
   afterEach(() => {
@@ -36,126 +31,65 @@ describe('SongsService', () => {
     expect(songService).toBeTruthy();
   });
 
-  it('fetches songs from the API if force reload is required', () => {
+  it('loads a new list into the service', () => {
+    const spy = spyOn(songService.songsList$, 'next').and.callThrough();
+
+    songService.assingSongsToList(MOCK_LIST);
+
+    expect(songService.songsList$.getValue()).toEqual(MOCK_LIST);
+    expect(spy).toHaveBeenCalledWith(MOCK_LIST);
+  });
+
+  it('should add a new song to the list', () => {
+    const newSong = MOCK_LIST[0];
+
+    const spy = spyOn(songService.songsList$, 'next').and.callThrough();
+
+    songService.addSongToLocalList(newSong);
+
+    expect(songService.songsList$.getValue()).toEqual([newSong]);
+    expect(spy).toHaveBeenCalledWith([newSong]);
+  });
+
+  it('should update an existing song in the list', () => {
+    const initialSong = MOCK_LIST[0];
+    songService.addSongToLocalList(initialSong);
+
+    const updatedSong = new SongModel({ id: '1', title: 'Updated Song', artist: 'Artist 1', release_date: '2024-02-01', price: 12 });
+
+    const spy = spyOn(songService.songsList$, 'next').and.callThrough();
+
+    songService.updateLocalList('1', updatedSong);
+
+    expect(songService.songsList$.getValue()).toEqual([updatedSong]);
+    expect(spy).toHaveBeenCalledWith([updatedSong]);
+  });
+
+  it('should remove a song from the list', () => {
+    const initialSong = new SongModel({ id: '1', title: 'Song 1', artist: 'Artist 1', release_date: '2024-01-01', price: 10 });
+    songService.addSongToLocalList(initialSong);
+
+    const spy = spyOn(songService.songsList$, 'next').and.callThrough();
+
+    songService.removeSongFromLocalList('1');
+
+    expect(songService.songsList$.getValue()).toEqual([]);
+    expect(spy).toHaveBeenCalledWith([]);
+  });
+
+  it('fetches songs from the API and converts the dtos to models', () => {
     songService.getAllSongs().subscribe(songs => {
-      expect(songService['songList'].length).toBe(3);
-      expect(songService['songList'][0].title).toBe('Blinding Lights');
-      expect(songService['songList'][1].title).toBe('Shape of You');
-      expect(songService['songList'][2].title).toBe('Levitating');
-      expect(songService['songList'][0] instanceof SongModel).toBeTrue();
+      expect(songs.length).toBe(3);
+      expect(songs[0].title).toBe('Blinding Lights');
+      expect(songs[1].title).toBe('Shape of You');
+      expect(songs[2].title).toBe('Levitating');
+      expect(songs[0] instanceof SongModel).toBeTrue();
+      expect(songs[1] instanceof SongModel).toBeTrue();
+      expect(songs[2] instanceof SongModel).toBeTrue();
     });
 
     const req = httpMock.expectOne(songService['songsApiURL']);
     expect(req.request.method).toBe('GET');
     req.flush(MOCK_LIST);
-  });
-
-  it('creates a new song', () => {
-    const songDto = { ...SongModel.toDto(MOCK_LIST[0]), id: undefined };
-
-    songService.addSong(songDto).subscribe(() =>
-      songService.songsList$.subscribe(list => {
-        expect(list.length).toBe(1);
-        expect(list[0].title).toBe(songDto.title);
-      })
-    );
-
-    const req = httpMock.expectOne(songService['songsApiURL']);
-    expect(req.request.method).toBe('POST');
-    req.flush(songDto);
-  });
-
-  it('updates an existing song', () => {
-    const songDto = SongModel.toDto(MOCK_LIST[0]);
-    const newTitle = 'la cucaracha';
-    const updatedSong = { ...songDto, title: newTitle };
-
-    songService['songList'] = [MOCK_LIST[0]];
-
-    songService.updateSong('1', updatedSong).subscribe(() =>
-      songService.songsList$.subscribe(list => {
-        expect(list.length).toBe(1);
-        expect(list[0].title).toBe(newTitle);
-      })
-    );
-
-    const req = httpMock.expectOne(`${songService['songsApiURL']}/${songDto.id!}`);
-    expect(req.request.method).toBe('PUT');
-    req.flush(updatedSong);
-  });
-
-  it('deletes a song by id', () => {
-    const idToDelete = '1';
-    const songToDelete = MOCK_LIST[0];
-
-    songService['songList'] = [songToDelete];
-
-    songService.deleteSong(idToDelete).subscribe(() =>
-      songService.songsList$.subscribe(list => {
-        expect(list.length).toBe(0);
-        expect(songService['songList'].length).toBe(0);
-      })
-    );
-
-    const req = httpMock.expectOne(`${songService['songsApiURL']}/${idToDelete}`);
-    expect(req.request.method).toBe('DELETE');
-    req.flush(songToDelete);
-  });
-
-  it('handles 404s errors and pushes the correct notification', () => {
-    const errorResponse = { status: 404, statusText: 'Not Found' };
-    const errorMessage = 'Content not found';
-
-    songService.getAllSongs().subscribe({
-      next: () => fail('Expected error, but got success'),
-      error: error => {
-        expect(notificationsService.pushNotification).toHaveBeenCalledWith({
-          message: errorMessage,
-          status: MessageStatus.ERROR,
-        });
-      },
-    });
-
-    const req = httpMock.expectOne(songService['songsApiURL']);
-    req.flush('Not Found', errorResponse);
-  });
-
-  it('handles 500 errors and pushes the correct notification', () => {
-    const errorResponse = { status: 500, statusText: 'Internal Server Error' };
-    const errorMessage = 'Internal server error';
-
-    // Simulate a failed HTTP request
-    songService.getAllSongs().subscribe({
-      next: () => fail('Expected error, but got success'),
-      error: error => {
-        expect(notificationsService.pushNotification).toHaveBeenCalledWith({
-          message: errorMessage,
-          status: MessageStatus.ERROR,
-        });
-      },
-    });
-
-    const req = httpMock.expectOne(songService['songsApiURL']);
-    req.flush('Internal Server Error', errorResponse);
-  });
-
-  it('handles unknown errors and pushes the correct notification', () => {
-    const errorResponse = { status: 400, statusText: 'Bad Request' };
-    const errorMessage = 'Unknown server error';
-
-    // Simulate a failed HTTP request
-    songService.getAllSongs().subscribe({
-      next: () => fail('Expected error, but got success'),
-      error: error => {
-        expect(notificationsService.pushNotification).toHaveBeenCalledWith({
-          message: errorMessage,
-          status: MessageStatus.ERROR,
-        });
-      },
-    });
-
-    const req = httpMock.expectOne(songService['songsApiURL']);
-    expect(req.request.method).toBe('GET');
-    req.flush('Bad Request', errorResponse);
   });
 });
