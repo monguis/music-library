@@ -13,6 +13,7 @@ body {
   --highlight-green-color: #00793a;
   --highlight-red-color: #8b0000;
   --bg-dark-blue: #1a2944;
+  --main-shadow: 0 3px 6px #00000029;
 }
 
 // Sizes
@@ -55,11 +56,20 @@ button.app-btn {
   font-family: var(--regular-font);
   font-weight: 600;
   background-color: var(--highlight-green-color);
+  box-shadow: var(--main-shadow);
   padding: 0.7rem 1rem;
+  transition: 0.25s all ease;
   &:hover {
     background-color: hsl(0, 0%, 100%);
     color: #1e2859;
     border: 2px solid var(--highlight-green-color);
+  }
+
+  &[disabled] {
+    pointer-events: none;
+    background-color: hsl(0, 0%, 100%);
+    color: gray;
+    border: 2px solid var(gray);
   }
   &.danger {
     background-color: var(--highlight-red-color);

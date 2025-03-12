@@ -1,5 +1,7 @@
-.full-width {
-  width: 100%;
+.form-wrapper {
+  padding: 3rem 1rem 0;
+  max-width: 50rem;
+  margin: 0 auto;
 }
 
 .actions-list {
@@ -8,4 +10,11 @@
   display: flex;
   gap: 0.25rem;
   justify-content: end;
+}
+
+.songs-form {
+  &__field {
+    margin-bottom: 1rem;
+    width: 100%;
+  }
 }

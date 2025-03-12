@@ -1,26 +1,40 @@
-<h2>Add a new song to your list</h2>
-<form action="">
-  <mat-form-field class="full-width">
-    <mat-label>Title</mat-label>
-    <input matInput type="text" name="title" id="title" placeholder="Billy Jean" />
-  </mat-form-field>
-  <mat-form-field class="full-width">
-    <mat-label for="artist">Artist</mat-label>
-    <input matInput type="text" name="artist" id="artist" placeholder="Michael Jackson" />
-  </mat-form-field>
-  <mat-form-field class="full-width">
-    <mat-label>Release Date</mat-label>
-    <input matInput [matDatepicker]="picker" />
-    <mat-hint>MM/DD/YYYY</mat-hint>
-    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-datepicker #picker></mat-datepicker>
-  </mat-form-field>
-  <mat-form-field class="full-width">
-    <mat-label for="artist">Price</mat-label>
-    <input matInput type="number" name="price" id="price" placeholder="3.99" />
-  </mat-form-field>
-  <ul class="actions-list">
-    <button class="app-btn danger">Cancel</button>
-    <button class="app-btn">Save</button>
-  </ul>
-</form>
+<div class="form-wrapper">
+  <h2>{{ mode === 'create' ? 'Add a new song to your list' : 'Add a new song to your list' }}</h2>
+  <form [formGroup]="songForm" (ngSubmit)="submitForm()" class="songs-form">
+    <mat-form-field class="songs-form__field full-width">
+      <mat-label>Title</mat-label>
+      <input matInput type="text" name="title" id="title" placeholder="Billy Jean" formControlName="title" />
+      @if (!isFieldValid('title')) {
+        <mat-error>{{ getTextFieldErrorMessage('title') }}</mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field class="songs-form__field full-width">
+      <mat-label for="artist">Artist</mat-label>
+      <input matInput type="text" name="artist" id="artist" placeholder="Michael Jackson" formControlName="artist" />
+      @if (!isFieldValid('artist')) {
+        <mat-error>{{ getTextFieldErrorMessage('artist') }}</mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field class="songs-form__field full-width">
+      <mat-label>Release Date</mat-label>
+      <input matInput [matDatepicker]="picker" name="releaseDate" formControlName="releaseDate" />
+      <mat-hint>MM/DD/YYYY</mat-hint>
+      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+      @if (!isFieldValid('releaseDate')) {
+        <mat-error>{{ getReleaseDateErrorMessage() }}</mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field class="songs-form__field full-width">
+      <mat-label for="price">Price</mat-label>
+      <input matInput type="number" name="price" id="price" placeholder="3.99" formControlName="price" />
+      @if (!isFieldValid('price')) {
+        <mat-error>{{ getPriceFieldErrorMessage() }}</mat-error>
+      }
+    </mat-form-field>
+    <ul class="actions-list">
+      <button class="app-btn danger">Cancel</button>
+      <button class="app-btn" type="submit" [disabled]="!songForm.valid">{{ mode }} Song</button>
+    </ul>
+  </form>
+</div>
