@@ -16,7 +16,7 @@
     </ul>
     <app-songs-list
       [filterOptions]="filterOptions"
-      [songList]="songList"
+      [songList]="(songList$ | async) ?? []"
       (cardUpdate)="onUpdate($event)"
       (cardDelete)="onDelete($event)" />
   </div>

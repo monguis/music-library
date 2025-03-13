@@ -157,12 +157,19 @@ export class SongFormComponent implements OnInit, OnDestroy {
 
       dialogRef.afterClosed().subscribe(result => {
         if (result === 'confirm') {
-          this.songsService.updateSong(this.currentSongId, songDtoToSend).subscribe(newSong => {
-            this.songsService.updateLocalList(this.currentSongId, newSong);
-            this.notificationService.pushSuccessAlert(
-              `Song ID: ${this.currentSongId} has been updated successfully`
-            );
-            this.router.navigate(['/']);
+          this.songsService.updateSong(this.currentSongId, songDtoToSend).subscribe({
+            next: newSong => {
+              this.songsService.updateLocalList(this.currentSongId, newSong);
+              this.notificationService.pushSuccessAlert(
+                `Song ID: ${this.currentSongId} has been updated successfully`
+              );
+              this.router.navigate(['/']);
+            },
+            error: err => {
+              this.notificationService.pushErrorAlert(
+                `Song ID: ${this.currentSongId} could not be updated: ${err?.message ?? 'Unknown error'}`
+              );
+            },
           });
         }
       });
@@ -170,10 +177,17 @@ export class SongFormComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.songsService.addSong(songDtoToSend).subscribe(newSong => {
-      this.songsService.addSongToLocalList(newSong);
-      this.notificationService.pushSuccessAlert('Song was added successfully');
-      this.router.navigate(['/']);
+    this.songsService.addSong(songDtoToSend).subscribe({
+      next: newSong => {
+        this.songsService.addSongToLocalList(newSong);
+        this.notificationService.pushSuccessAlert('Song was added successfully');
+        this.router.navigate(['/']);
+      },
+      error: err => {
+        this.notificationService.pushErrorAlert(
+          `New song could not be created: ${err?.message ?? 'Unknown error'}`
+        );
+      },
     });
   }
 }
