@@ -15,7 +15,10 @@ export const httpForceError: HttpInterceptorFn = (
     mergeMap(resp => {
       const randomValue = Math.floor(Math.random() * 5);
 
-      if (randomValue < 1) {
+      const shoudRequestFail =
+        req.method === 'PUT' && req.url.includes('/songs') && randomValue < 1;
+
+      if (shoudRequestFail) {
         return throwError(() => new HttpErrorResponse({ error: 'Unknown error occurred' }));
       }
 
