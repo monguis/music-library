@@ -56,7 +56,9 @@
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.prod.ts"
                 }
-              ]
+              ],
+              "baseHref": "/music-library/",
+              "deployUrl": "/music-library/"
             },
             "development": {
               "optimization": false,
