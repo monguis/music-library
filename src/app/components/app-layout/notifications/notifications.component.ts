@@ -15,15 +15,15 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     private toastr: ToastrService
   ) {}
 
-  notSubscription?: Subscription;
+  notificationSub?: Subscription;
 
   ngOnInit() {
-    this.notSubscription = this.notificationsService.notifications$.subscribe(msg => {
+    this.notificationSub = this.notificationsService.notifications$.subscribe(msg => {
       this.toastr[msg.status](msg.message, msg.title);
     });
   }
 
   ngOnDestroy(): void {
-    this.notSubscription?.unsubscribe();
+    this.notificationSub?.unsubscribe();
   }
 }
