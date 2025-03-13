@@ -27,6 +27,6 @@ jobs:
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: music-library/dist/music-library/browser
+          folder: dist/music-library/browser
           branch: gh-pages
           token: ${{ secrets.GH_TOKEN }}
