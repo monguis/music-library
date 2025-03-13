@@ -7,12 +7,9 @@ import { MatInputModule } from '@angular/material/input';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SongDto, SongModel } from '../../models/song';
 import { SongsService } from '../../services/songs/songs.service';
-import {
-  MessageStatus,
-  NotificationsService,
-} from '../../services/notifications/notifications.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
+import { NotificationsService } from '../../services/notifications/notifications.service';
 
 type songFormMode = 'create' | 'update';
 
@@ -45,10 +42,7 @@ export class SongFormComponent implements OnInit, OnDestroy {
       this.currentSongId = this.route.snapshot.url[1].path;
 
       if (!this.songSnapshot && !this.currentSongId) {
-        this.notificationService.pushNotification({
-          message: `Song could not be found`,
-          status: MessageStatus.WARNING,
-        });
+        this.notificationService.pushWarningAlert(`Song could not be found`);
         this.router.navigate(['/']);
       }
     }
@@ -165,10 +159,9 @@ export class SongFormComponent implements OnInit, OnDestroy {
         if (result === 'confirm') {
           this.songsService.updateSong(this.currentSongId, songDtoToSend).subscribe(newSong => {
             this.songsService.updateLocalList(this.currentSongId, newSong);
-            this.notificationService.pushNotification({
-              message: `Song ID: ${this.currentSongId} has been updated successfully`,
-              status: MessageStatus.SUCCESS,
-            });
+            this.notificationService.pushSuccessAlert(
+              `Song ID: ${this.currentSongId} has been updated successfully`
+            );
             this.router.navigate(['/']);
           });
         }
@@ -179,10 +172,7 @@ export class SongFormComponent implements OnInit, OnDestroy {
 
     this.songsService.addSong(songDtoToSend).subscribe(newSong => {
       this.songsService.addSongToLocalList(newSong);
-      this.notificationService.pushNotification({
-        message: 'Song was added successfully',
-        status: MessageStatus.SUCCESS,
-      });
+      this.notificationService.pushSuccessAlert('Song was added successfully');
       this.router.navigate(['/']);
     });
   }

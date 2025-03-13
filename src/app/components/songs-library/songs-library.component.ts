@@ -5,10 +5,7 @@ import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
-import {
-  MessageStatus,
-  NotificationsService,
-} from '../../services/notifications/notifications.service';
+import { NotificationsService } from '../../services/notifications/notifications.service';
 import { SongsListComponent } from './songs-list/songs-list.component';
 
 @Component({
@@ -69,10 +66,7 @@ export class SongsLibraryComponent implements OnInit, OnDestroy {
       if (result === 'confirm') {
         this.songsService.deleteSong(id).subscribe(() => {
           this.songsService.removeSongFromLocalList(id);
-          this.notificationService.pushNotification({
-            status: MessageStatus.SUCCESS,
-            message: `Song ID: ${id} has been deleted successfully`,
-          });
+          this.notificationService.pushSuccessAlert(`Song ID: ${id} has been deleted successfully`);
         });
       }
     });

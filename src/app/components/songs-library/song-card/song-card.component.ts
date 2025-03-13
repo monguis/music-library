@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { SongModel } from '../../../models/song';
 
@@ -7,7 +7,6 @@ import { SongModel } from '../../../models/song';
   imports: [DatePipe, CurrencyPipe],
   templateUrl: './song-card.component.html',
   styleUrl: './song-card.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SongCardComponent {
   @Input({ required: true }) public song!: SongModel;

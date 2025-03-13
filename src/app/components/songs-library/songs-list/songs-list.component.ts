@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { FilterSongPipe } from '../../../pipes/filter-songs.pipe';
 import { SortSongsPipe } from '../../../pipes/sort-songs.pipe';
 import { SongModel } from '../../../models/song';
@@ -14,6 +14,7 @@ interface FilterOptions {
   imports: [FilterSongPipe, SortSongsPipe, SongCardComponent],
   templateUrl: './songs-list.component.html',
   styleUrl: './songs-list.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SongsListComponent {
   @Input({ required: true }) public filterOptions!: FilterOptions;

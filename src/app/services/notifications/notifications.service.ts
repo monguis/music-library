@@ -1,21 +1,34 @@
 import { Injectable } from '@angular/core';
-
-export const enum MessageStatus {
-  ERROR,
-  WARNING,
-  SUCCESS,
-}
-
-export interface NotificationMessage {
-  status: MessageStatus;
-  message: string;
-}
+import { MessageStatus, NotificationMessage } from '../../models/notification';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class NotificationsService {
-  pushNotification(notification: NotificationMessage) {
-    console.log(`status: ${notification.status} message: ${notification.message}`);
+  public notifications$ = new Subject<NotificationMessage>();
+
+  pushErrorAlert(message: string) {
+    this.notifications$.next({
+      status: MessageStatus.ERROR,
+      message,
+      title: 'Something went wrong',
+    });
+  }
+
+  pushWarningAlert(message: string) {
+    this.notifications$.next({
+      status: MessageStatus.WARNING,
+      message,
+      title: 'Warning',
+    });
+  }
+
+  pushSuccessAlert(message: string) {
+    this.notifications$.next({
+      status: MessageStatus.SUCCESS,
+      message,
+      title: 'Success',
+    });
   }
 }
