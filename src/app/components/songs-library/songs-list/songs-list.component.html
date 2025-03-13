@@ -1,0 +1,16 @@
+<ul class="song-list">
+  @for (
+    song of songList
+      | filterSongs: filterOptions.from : filterOptions.until
+      | sortSongs: 'releaseDate' : 'desc';
+    track song.id
+  ) {
+    <li>
+      <article
+        class="song-card"
+        [song]="song"
+        (delete)="onDelete($event)"
+        (update)="onUpdate($event)"></article>
+    </li>
+  }
+</ul>

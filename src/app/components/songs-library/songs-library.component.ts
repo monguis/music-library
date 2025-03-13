@@ -1,33 +1,26 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { SongsService } from '../../services/songs/songs.service';
 import { SongModel } from '../../models/song';
-import { SongCardComponent } from './song-card/song-card.component';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { FilterSongPipe } from '../../pipes/filter-songs.pipe';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
 import {
   MessageStatus,
   NotificationsService,
 } from '../../services/notifications/notifications.service';
-import { SortGenericPipe } from '../../pipes/sort-songs.pipe';
-
-interface FilterOptions {
-  from?: string;
-  until?: string;
-}
+import { SongsListComponent } from './songs-list/songs-list.component';
 
 @Component({
   selector: 'app-songs-library',
-  imports: [SongCardComponent, RouterModule, FilterSongPipe, SortGenericPipe],
+  imports: [RouterModule, SongsListComponent],
   templateUrl: './songs-library.component.html',
   styleUrl: './songs-library.component.scss',
 })
 export class SongsLibraryComponent implements OnInit, OnDestroy {
   public songList: SongModel[] = [];
   public sortTiles: string[] = [];
-  public filterOptions: FilterOptions = {};
+  public filterOptions: any = {};
   private paramsSubcription?: Subscription;
   private songsSubcription?: Subscription;
 
@@ -66,7 +59,6 @@ export class SongsLibraryComponent implements OnInit, OnDestroy {
 
   onDelete(id: string) {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      width: '250px',
       data: {
         title: 'You are bout to delete a Song.',
         message: 'Do you want to continue?',

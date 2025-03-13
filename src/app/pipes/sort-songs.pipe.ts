@@ -4,9 +4,9 @@ import { SongModel } from '../models/song';
 type sortType = 'asc' | 'desc';
 
 @Pipe({
-  name: 'sortGeneric',
+  name: 'sortSongs',
 })
-export class SortGenericPipe implements PipeTransform {
+export class SortSongsPipe implements PipeTransform {
   transform(array: SongModel[], field: keyof SongModel, order: sortType = 'asc'): SongModel[] {
     if (!array) return [];
     if (!array || !field) return array;

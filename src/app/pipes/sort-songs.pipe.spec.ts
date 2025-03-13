@@ -1,8 +1,8 @@
-import { SortGenericPipe } from './sort-songs.pipe';
+import { SortSongsPipe } from './sort-songs.pipe';
 
 describe('SortGenericPipe', () => {
   it('create an instance', () => {
-    const pipe = new SortGenericPipe();
+    const pipe = new SortSongsPipe();
     expect(pipe).toBeTruthy();
   });
 });

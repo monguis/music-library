@@ -14,21 +14,10 @@
         </li>
       }
     </ul>
+    <app-songs-list
+      [filterOptions]="filterOptions"
+      [songList]="songList"
+      (onCardUpdate)="onUpdate($event)"
+      (onCardDelete)="onDelete($event)" />
   </div>
-  <ul class="song-list-page__song-list">
-    @for (
-      song of songList
-        | filterSongs: filterOptions.from : filterOptions.until
-        | sortGeneric: 'releaseDate' : 'desc';
-      track song.id
-    ) {
-      <li>
-        <article
-          class="song-card"
-          [song]="song"
-          (delete)="onDelete($event)"
-          (update)="onUpdate($event)"></article>
-      </li>
-    }
-  </ul>
 </section>
