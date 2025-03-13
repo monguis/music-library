@@ -3,14 +3,26 @@
   <form [formGroup]="songForm" (ngSubmit)="submitForm()" class="songs-form">
     <mat-form-field class="songs-form__field full-width">
       <mat-label>Title</mat-label>
-      <input matInput type="text" name="title" id="title" placeholder="Billy Jean" formControlName="title" />
+      <input
+        matInput
+        type="text"
+        name="title"
+        id="title"
+        placeholder="Billy Jean"
+        formControlName="title" />
       @if (!isFieldValid('title')) {
         <mat-error>{{ getTextFieldErrorMessage('title') }}</mat-error>
       }
     </mat-form-field>
     <mat-form-field class="songs-form__field full-width">
       <mat-label for="artist">Artist</mat-label>
-      <input matInput type="text" name="artist" id="artist" placeholder="Michael Jackson" formControlName="artist" />
+      <input
+        matInput
+        type="text"
+        name="artist"
+        id="artist"
+        placeholder="Michael Jackson"
+        formControlName="artist" />
       @if (!isFieldValid('artist')) {
         <mat-error>{{ getTextFieldErrorMessage('artist') }}</mat-error>
       }
@@ -27,14 +39,22 @@
     </mat-form-field>
     <mat-form-field class="songs-form__field full-width">
       <mat-label for="price">Price</mat-label>
-      <input matInput type="number" name="price" id="price" placeholder="3.99" formControlName="price" />
+      <input
+        matInput
+        type="number"
+        name="price"
+        id="price"
+        placeholder="3.99"
+        formControlName="price" />
       @if (!isFieldValid('price')) {
         <mat-error>{{ getPriceFieldErrorMessage() }}</mat-error>
       }
     </mat-form-field>
     <ul class="actions-list">
       <button class="app-btn danger" (click)="onCancel()" type="button">Cancel</button>
-      <button class="app-btn" type="submit" [disabled]="!songForm.valid">{{ mode }} Song</button>
+      <button class="app-btn" type="submit" [disabled]="isFormSubmitDisabled()">
+        {{ mode }} Song
+      </button>
     </ul>
   </form>
 </div>

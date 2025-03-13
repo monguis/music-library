@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -23,7 +23,7 @@ type songFormMode = 'create' | 'update';
   providers: [provideNativeDateAdapter()],
   styleUrl: './song-form.component.scss',
 })
-export class SongFormComponent implements OnInit {
+export class SongFormComponent implements OnInit, OnDestroy {
   public songForm!: FormGroup;
   public mode: songFormMode = 'create';
   public songSnapshot: SongModel | null = null;
@@ -47,7 +47,7 @@ export class SongFormComponent implements OnInit {
       if (!this.songSnapshot && !this.currentSongId) {
         this.notificationService.pushNotification({
           message: `Song could not be found`,
-          status: MessageStatus.SUCCESS,
+          status: MessageStatus.WARNING,
         });
         this.router.navigate(['/']);
       }
@@ -71,6 +71,10 @@ export class SongFormComponent implements OnInit {
         [Validators.required, Validators.min(0.01)],
       ],
     });
+  }
+
+  ngOnDestroy() {
+    this.songsService.setSongForEdit(null);
   }
 
   isFieldValid(fieldName: string) {
@@ -101,30 +105,43 @@ export class SongFormComponent implements OnInit {
     return '';
   }
 
-  onCancel() {
-    if (this.mode === 'update' && this.songForm.valid) {
-      const currentValues = {
-        id: this.songSnapshot!.id,
-        ...this.songForm.value,
-      } as SongModel;
+  getFormIsEqualToSnapshot() {
+    const currentValues = {
+      id: this.currentSongId,
+      ...this.songForm.value,
+    } as SongModel;
 
-      if (!this.songSnapshot?.equals(currentValues)) {
-        const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-          data: {
-            title: 'Discarding changes',
-            message: 'Do you want to continue?',
-          },
-        });
-        dialogRef.afterClosed().subscribe(result => {
-          if (result === 'confirm') {
-            this.router.navigate(['/']);
-          }
-        });
-      } else {
-        this.router.navigate(['/']);
-      }
-    } else {
+    return this.songSnapshot?.equals(currentValues);
+  }
+
+  isFormSubmitDisabled() {
+    return !this.songForm.valid || this.getFormIsEqualToSnapshot();
+  }
+
+  onCancel() {
+    if (this.mode !== 'update' || !this.songForm.valid) {
       this.router.navigate(['/']);
+      return;
+    }
+
+    if (this.mode === 'update' && this.songForm.valid) {
+      const isFormEqualToSnapshot = this.getFormIsEqualToSnapshot();
+
+      if (isFormEqualToSnapshot) {
+        this.router.navigate(['/']);
+        return;
+      }
+      const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+        data: {
+          title: 'Discarding changes',
+          message: 'Do you want to continue?',
+        },
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        if (result === 'confirm') {
+          this.router.navigate(['/']);
+        }
+      });
     }
   }
 

@@ -20,7 +20,6 @@ export const httpForceError: HttpInterceptorFn = (
       }
 
       return of(resp);
-    }),
-    catchError(err => throwError(() => err))
+    })
   );
 };

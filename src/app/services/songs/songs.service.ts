@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { SongModel, SongDto } from '../../models/song';
-import { BehaviorSubject, catchError, finalize, map, Observable, tap, throwError } from 'rxjs';
+import { BehaviorSubject, finalize, map, Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { MessageStatus, NotificationsService } from '../notifications/notifications.service';
 
 @Injectable({
   providedIn: 'root',
@@ -11,14 +10,11 @@ import { MessageStatus, NotificationsService } from '../notifications/notificati
 export class SongsService {
   private songsApiURL = environment.songsApiUrl + '/songs';
   private songList: SongModel[] = [];
-  private songToUpdate?: SongModel;
+  private songToUpdate?: SongModel | null = null;
   public loading$ = new BehaviorSubject<boolean>(false);
   public songsList$ = new BehaviorSubject<SongModel[]>(this.songList);
 
-  constructor(
-    private http: HttpClient,
-    private notificationService: NotificationsService
-  ) {}
+  constructor(private http: HttpClient) {}
 
   assingSongsToList(newSongs: SongModel[]) {
     this.songList = newSongs;
@@ -55,7 +51,7 @@ export class SongsService {
     );
   }
 
-  setSongForEdit(song: SongModel) {
+  setSongForEdit(song: SongModel | null) {
     this.songToUpdate = song;
   }
 
@@ -85,6 +81,8 @@ export class SongsService {
 
   deleteSong(id: string): Observable<void> {
     this.loading$.next(true);
-    return this.http.delete<void>(`${this.songsApiURL}/${id}`).pipe(finalize(() => this.loading$.next(false)));
+    return this.http
+      .delete<void>(`${this.songsApiURL}/${id}`)
+      .pipe(finalize(() => this.loading$.next(false)));
   }
 }
