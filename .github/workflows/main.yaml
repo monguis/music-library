@@ -17,6 +17,9 @@ jobs:
         with:
           node-version: 20
 
+      - name: Set Environment Variables
+        run: echo "SONG_API=${{ secrets.SONG_API }}" >> $GITHUB_ENV
+
       - name: Build Angular app to prod
         working-directory: ./
         run: npm install && npm run build:prod
@@ -25,5 +28,5 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: music-library/dist/music-library/browser
-          branch: gh-pages  
+          branch: gh-pages
           token: ${{ secrets.GH_TOKEN }}
