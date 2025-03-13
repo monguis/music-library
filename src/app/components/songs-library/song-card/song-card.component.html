@@ -1,21 +1,27 @@
 <div class="info">
   <div class="info__song-info">
-    <p class="info__song-info__title">Title: {{ song.title }}</p>
-    <p class="info__song-info__artist">Artist: {{ song.artist }}</p>
-    <p class="info__song-info__release-date">Released in: {{ song.releaseDate | date }}</p>
+    <p data-test-id="title" class="info__song-info__title">Title: {{ song.title }}</p>
+    <p data-test-id="artist" class="info__song-info__artist">Artist: {{ song.artist }}</p>
+    <p data-test-id="releaseDate" class="info__song-info__release-date">
+      Released in: {{ song.releaseDate | date }}
+    </p>
   </div>
   <div class="info__internal-info">
-    <p class="info__internal-info__id">ID: {{ song.id }}</p>
-    <p class="info__internal-info__price">Price: {{ song.price | currency }}</p>
+    <p data-test-id="id" class="info__internal-info__id">ID: {{ song.id }}</p>
+    <p data-test-id="price" class="info__internal-info__price">
+      Price: {{ song.price | currency }}
+    </p>
   </div>
 </div>
 <div class="actions">
   <ul class="actions__list">
     <li>
-      <button class="app-btn" (click)="handleUpdate()">Update</button>
+      <button data-test-id="update-button" class="app-btn" (click)="handleUpdate()">Update</button>
     </li>
     <li>
-      <button class="app-btn danger" (click)="handleDelete()">Delete</button>
+      <button data-test-id="delete-button" class="app-btn danger" (click)="handleDelete()">
+        Delete
+      </button>
     </li>
   </ul>
 </div>

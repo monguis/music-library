@@ -32,7 +32,7 @@ describe('FiltersongPipe', () => {
       price: 7,
       releaseDate: new Date('03-29-2019'),
     },
-  ];
+  ] as SongModel[];
 
   it('create an instance', () => {
     const pipe = new FilterSongPipe();

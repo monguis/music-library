@@ -1,11 +1,10 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { CurrencyPipe, DatePipe } from '@angular/common';
-import { RouterModule } from '@angular/router';
 import { SongModel } from '../../../models/song';
 
 @Component({
   selector: 'article.song-card',
-  imports: [DatePipe, CurrencyPipe, RouterModule],
+  imports: [DatePipe, CurrencyPipe],
   templateUrl: './song-card.component.html',
   styleUrl: './song-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
