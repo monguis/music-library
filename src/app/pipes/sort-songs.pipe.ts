@@ -1,8 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { SongModel } from '../models/song';
 
-type sortType = 'asc' | 'desc';
-
 @Pipe({
   name: 'sortSongs',
 })

@@ -26,12 +26,12 @@ import { SongModel } from '../../../models/song';
 })
 export class SongsInputSectionComponent {
   @Output() public apply = new EventEmitter<FilterOptions<SongModel>>();
-  public sortFields = [
+  public sortFields: { title: string; value: keyof SongModel }[] = [
     { title: 'Title', value: 'title' },
-    { title: 'Artist', value: 'Artist' },
-    { title: 'Release Date', value: 'Release Date' },
-    { title: 'ID', value: 'ID' },
-    { title: 'Price', value: 'Price' },
+    { title: 'Artist', value: 'artist' },
+    { title: 'Release Date', value: 'releaseDate' },
+    { title: 'ID', value: 'id' },
+    { title: 'Price', value: 'price' },
   ];
 
   public from?: string;
