@@ -1,3 +1,9 @@
+@mixin info-field {
+  margin: 0;
+  font-size: 1.2rem;
+  line-height: 1.5rem;
+}
+
 :host {
   border-left: 5px solid var(--primary-color);
   margin-bottom: 5px;
@@ -18,14 +24,14 @@
       }
       &__artist,
       &__release-date {
-        @extend %info-field;
+        @include info-field;
       }
     }
     &__internal-info {
       width: 15%;
       &__id,
       &__price {
-        @extend %info-field;
+        @include info-field;
       }
     }
   }
@@ -48,10 +54,42 @@
       }
     }
   }
-}
 
-%info-field {
-  margin: 0;
-  font-size: 1.2rem;
-  line-height: 1.5rem;
+  @media (max-width: 600px) {
+    display: block;
+
+    .info {
+      width: 100%;
+      display: block;
+      &__song-info {
+        display: block;
+        width: 100%;
+        margin-bottom: 0.5rem;
+      }
+      &__internal-info {
+        width: 100%;
+        display: block;
+        margin-bottom: 0.5rem;
+      }
+    }
+    .actions {
+      width: 100%;
+      display: block;
+      &__list {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        gap: 0.5rem;
+        padding: 0;
+
+        & li {
+          margin-bottom: 0.25rem;
+        }
+        & button {
+          width: 8rem;
+        }
+      }
+    }
+  }
 }
