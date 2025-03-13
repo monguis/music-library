@@ -1,0 +1,54 @@
+<div class="songs-input">
+  <form #inputForm="ngForm" class="songs-input__form" (ngSubmit)="emitApply()">
+    <div class="songs-input__form__section for-filters">
+      <mat-form-field class="songs-input__form__section__field">
+        <mat-label>Filter from</mat-label>
+        <input
+          matInput
+          [matDatepicker]="picker"
+          placeholder="MM/DD/YYYY"
+          [(ngModel)]="from"
+          name="from" />
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field class="songs-input__form__section__field">
+        <mat-label>Filter until</mat-label>
+        <input
+          matInput
+          [matDatepicker]="picker2"
+          [min]="from"
+          placeholder="MM/DD/YYYY"
+          [(ngModel)]="until"
+          name="until"
+          #untilDpRef="ngModel" />
+        <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+        <mat-datepicker #picker2></mat-datepicker>
+        @if (untilDpRef.invalid && untilDpRef.touched) {
+          <mat-error>Until cannot be before from</mat-error>
+        }
+      </mat-form-field>
+    </div>
+    <div class="songs-input__form__section for-sorts">
+      <mat-form-field class="songs-input__form__section__field">
+        <mat-label>Sort by</mat-label>
+        <mat-select [(ngModel)]="selectedSortField" name="sortField">
+          <mat-option></mat-option>
+          @for (field of sortFields; track field) {
+            <mat-option [value]="field.value">{{ field.title | titlecase }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <mat-checkbox
+        [(ngModel)]="isSortingDesc"
+        name="isSortingDesc"
+        class="songs-input__form__section__checkbox">
+        Sort descendently
+      </mat-checkbox>
+    </div>
+    <div class="songs-input__form__submit-button-section">
+      <button class="app-btn" type="submit" [disabled]="!inputForm.valid">Apply</button>
+    </div>
+  </form>
+</div>

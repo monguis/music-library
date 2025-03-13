@@ -3,11 +3,7 @@ import { FilterSongPipe } from '../../../pipes/filter-songs.pipe';
 import { SortSongsPipe } from '../../../pipes/sort-songs.pipe';
 import { SongModel } from '../../../models/song';
 import { SongCardComponent } from '../song-card/song-card.component';
-
-interface FilterOptions {
-  from?: string;
-  until?: string;
-}
+import { FilterOptions } from '../../../models/sorting-options';
 
 @Component({
   selector: 'app-songs-list',

@@ -1,0 +1,29 @@
+.songs-input {
+  &__form {
+    height: 4rem;
+    display: flex;
+    gap: 2rem;
+    height: 5rem;
+    align-items: center;
+    &__section {
+      position: relative;
+      width: 40%;
+      display: flex;
+      gap: 0.25rem;
+      flex-shrink: 0;
+
+      &__field {
+        margin-top: 1rem;
+      }
+
+      &__checkbox {
+        display: flex;
+      }
+    }
+
+    &__submit-button-section {
+      flex-grow: 1;
+      text-align: right;
+    }
+  }
+}

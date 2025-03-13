@@ -8,10 +8,11 @@ import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confi
 import { NotificationsService } from '../../services/notifications/notifications.service';
 import { SongsListComponent } from './songs-list/songs-list.component';
 import { AsyncPipe } from '@angular/common';
+import { SongsInputSectionComponent } from './songs-input-section/songs-input-section.component';
 
 @Component({
   selector: 'app-songs-library',
-  imports: [RouterModule, SongsListComponent, AsyncPipe],
+  imports: [RouterModule, SongsListComponent, AsyncPipe, SongsInputSectionComponent],
   templateUrl: './songs-library.component.html',
   styleUrl: './songs-library.component.scss',
 })
