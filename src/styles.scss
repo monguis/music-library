@@ -9,7 +9,12 @@
 
 // Sizes
 :root {
-  --content-width-lg: 80vw;
+  --content-max-width-lg: 80vw;
+  --content-padding-lg: 0 1.5rem;
+  --content-margin-lg: 0 6%;
+  --content-padding-sm: 0 0.5rem;
+  --content-max-width-sm: 100%;
+  --content-margin-sm: 0 0.5rem;
 }
 
 // Fonts
@@ -87,4 +92,16 @@ body {
 body {
   margin: 0;
   font-family: var(--regular-font);
+}
+
+@mixin main-content-size {
+  max-width: var(--content-max-width-lg);
+  margin: var(--content-margin-lg);
+  padding: var(--content-padding-lg);
+
+  @media (max-width: 600px) {
+    padding: var(--content-padding-sm);
+    max-width: var(--content-max-width-sm);
+    margin: var(--content-margin-sm);
+  }
 }

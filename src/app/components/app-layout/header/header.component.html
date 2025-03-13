@@ -2,7 +2,7 @@
   <p class="menu-nav__title">
     <a [routerLink]="['']" routerLinkActive="router-link-active">Song lister</a>
   </p>
-  <ul class="menu-nav__header-button-list">
+  <ul class="menu-nav__header-button-list desktop">
     <li>
       <a [routerLink]="['']" routerLinkActive="router-link-active">Song list</a>
     </li>
@@ -10,4 +10,16 @@
       <a [routerLink]="['create']" routerLinkActive="router-link-active">Add new song</a>
     </li>
   </ul>
+  <button class="menu-nav__mobile-menu-button" mat-icon-button [matMenuTriggerFor]="menu">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <mat-menu
+    #menu="matMenu"
+    xPosition="before"
+    aria-hidden="false"
+    aria-label="Main menu button."
+    class="menu-nav__mobile-menu">
+    <button mat-menu-item [routerLink]="['']">Home</button>
+    <button mat-menu-item [routerLink]="['create']">Add a new song</button>
+  </mat-menu>
 </nav>

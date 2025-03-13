@@ -3,7 +3,7 @@ import { CurrencyPipe, DatePipe } from '@angular/common';
 import { SongModel } from '../../../models/song';
 
 @Component({
-  selector: 'article.song-card',
+  selector: 'article[songCard]',
   imports: [DatePipe, CurrencyPipe],
   templateUrl: './song-card.component.html',
   styleUrl: './song-card.component.scss',

@@ -1,26 +1,56 @@
-.menu-nav {
-  line-height: 1rem;
-  display: flex;
-  margin: 0;
-  align-items: center;
-  max-width: var(--content-width-lg);
-  justify-content: space-between;
-  &__header-button-list {
+@use '../../../../styles.scss' as main;
+@use '@angular/material' as mat;
+
+:host {
+  background-color: var(--bg-dark-blue);
+  .menu-nav {
+    line-height: 1rem;
     display: flex;
     align-items: center;
-    gap: 1rem;
-    list-style: none;
-    li > a {
-      color: white;
-      text-decoration: none;
+    max-width: var(--content-max-width-lg);
+    justify-content: space-between;
+    @include main.main-content-size;
+
+    &__header-button-list {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      list-style: none;
+      li > a {
+        color: white;
+        text-decoration: none;
+      }
+      &.mobile {
+        display: none;
+      }
+    }
+    &__title {
+      font-size: 1.5rem;
+      font-weight: bold;
+      & > a {
+        color: white;
+        text-decoration: none;
+      }
     }
   }
-  &__title {
-    font-size: 1.5rem;
-    font-weight: bold;
-    & > a {
-      color: white;
-      text-decoration: none;
+  @media (max-width: 600px) {
+    .menu-nav {
+      &__header-button-list.desktop {
+        display: none;
+      }
+
+      &__mobile-menu > * {
+        @include mat.menu-overrides(
+          (
+            item-label-text-color: orange,
+            item-icon-color: red,
+          )
+        );
+      }
+      &__mobile-menu-button {
+        display: block;
+        color: white;
+      }
     }
   }
 }

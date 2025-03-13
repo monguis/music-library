@@ -7,8 +7,8 @@
   ) {
     <li>
       <article
-        class="song-card"
         [song]="song"
+        songCard
         (delete)="onDelete($event)"
         (update)="onUpdate($event)"></article>
     </li>
