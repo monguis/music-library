@@ -7,8 +7,10 @@ import { MatInputModule } from '@angular/material/input';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SongDto, SongModel } from '../../models/song';
 import { SongsService } from '../../services/songs/songs.service';
-import { MessageStatus, NotificationsService } from '../../services/notifications/notifications.service';
-import { Location } from '@angular/common';
+import {
+  MessageStatus,
+  NotificationsService,
+} from '../../services/notifications/notifications.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
 
@@ -33,7 +35,6 @@ export class SongFormComponent implements OnInit {
     private notificationService: NotificationsService,
     private route: ActivatedRoute,
     private router: Router,
-    private location: Location,
     private readonly dialog: MatDialog
   ) {}
 
@@ -43,7 +44,7 @@ export class SongFormComponent implements OnInit {
       this.songSnapshot = this.songsService.getSongToUpdate();
       this.currentSongId = this.route.snapshot.url[1].path;
 
-      if (!this.songSnapshot && this.currentSongId) {
+      if (!this.songSnapshot && !this.currentSongId) {
         this.notificationService.pushNotification({
           message: `Song could not be found`,
           status: MessageStatus.SUCCESS,
@@ -53,10 +54,22 @@ export class SongFormComponent implements OnInit {
     }
 
     this.songForm = this.fb.group({
-      title: [this.mode === 'update' ? this.songSnapshot?.title : '', [Validators.required, Validators.maxLength(25)]],
-      artist: [this.mode === 'update' ? this.songSnapshot?.artist : '', [Validators.required, Validators.maxLength(25)]],
-      releaseDate: [this.mode === 'update' ? this.songSnapshot?.releaseDate : '', [Validators.required]],
-      price: [this.mode === 'update' ? this.songSnapshot?.price : 0, [Validators.required, Validators.min(0.01)]],
+      title: [
+        this.mode === 'update' ? this.songSnapshot?.title : '',
+        [Validators.required, Validators.maxLength(25)],
+      ],
+      artist: [
+        this.mode === 'update' ? this.songSnapshot?.artist : '',
+        [Validators.required, Validators.maxLength(25)],
+      ],
+      releaseDate: [
+        this.mode === 'update' ? this.songSnapshot?.releaseDate : '',
+        [Validators.required],
+      ],
+      price: [
+        this.mode === 'update' ? this.songSnapshot?.price : 0,
+        [Validators.required, Validators.min(0.01)],
+      ],
     });
   }
 
@@ -68,7 +81,8 @@ export class SongFormComponent implements OnInit {
   getTextFieldErrorMessage(fieldName: string) {
     const control = this.songForm.get(fieldName);
     if (control?.hasError('required')) return 'This field is required.';
-    if (control?.hasError('maxlength')) return `Maximum length is ${control.errors?.['maxlength'].requiredLength}.`;
+    if (control?.hasError('maxlength'))
+      return `Maximum length is ${control.errors?.['maxlength'].requiredLength}.`;
     return '';
   }
 
@@ -81,31 +95,36 @@ export class SongFormComponent implements OnInit {
 
   getReleaseDateErrorMessage() {
     const control = this.songForm.get('releaseDate');
-    if (control?.errors?.['matDatepickerParse']) return `${control?.errors?.['matDatepickerParse']?.text} is not a valid date.`;
+    if (control?.errors?.['matDatepickerParse'])
+      return `${control?.errors?.['matDatepickerParse']?.text} is not a valid date.`;
     if (control?.hasError('required')) return 'This field is required.';
     return '';
   }
 
   onCancel() {
     if (this.mode === 'update' && this.songForm.valid) {
-      const currentValues = this.songForm.value as SongModel;
+      const currentValues = {
+        id: this.songSnapshot!.id,
+        ...this.songForm.value,
+      } as SongModel;
 
       if (!this.songSnapshot?.equals(currentValues)) {
         const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-          width: '250px',
           data: {
-            title: 'You are about to udpate a Song.',
+            title: 'Discarding changes',
             message: 'Do you want to continue?',
           },
         });
         dialogRef.afterClosed().subscribe(result => {
           if (result === 'confirm') {
-            this.location.back();
+            this.router.navigate(['/']);
           }
         });
+      } else {
+        this.router.navigate(['/']);
       }
     } else {
-      this.location.back();
+      this.router.navigate(['/']);
     }
   }
 
@@ -119,9 +138,8 @@ export class SongFormComponent implements OnInit {
 
     if (this.mode === 'update') {
       const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-        width: '250px',
         data: {
-          title: 'You are about to udpate a Song.',
+          title: 'Udpate Song.',
           message: 'Do you want to continue?',
         },
       });

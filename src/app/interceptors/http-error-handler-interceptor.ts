@@ -1,8 +1,16 @@
-import { HttpRequest, HttpErrorResponse, HttpHandlerFn, HttpInterceptorFn } from '@angular/common/http';
+import {
+  HttpRequest,
+  HttpErrorResponse,
+  HttpHandlerFn,
+  HttpInterceptorFn,
+} from '@angular/common/http';
 import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-export const httpErrorHandler: HttpInterceptorFn = (req: HttpRequest<unknown>, next: HttpHandlerFn) => {
+export const httpErrorHandler: HttpInterceptorFn = (
+  req: HttpRequest<unknown>,
+  next: HttpHandlerFn
+) => {
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
       let errorMessage = 'Unknown error occurred';
