@@ -5,7 +5,7 @@ import {
   HttpErrorResponse,
 } from '@angular/common/http';
 import { of, throwError } from 'rxjs';
-import { catchError, mergeMap } from 'rxjs/operators';
+import { mergeMap } from 'rxjs/operators';
 
 export const httpForceError: HttpInterceptorFn = (
   req: HttpRequest<unknown>,

@@ -3,11 +3,35 @@ import { FilterSongPipe } from './filter-songs.pipe';
 
 describe('FiltersongPipe', () => {
   const testData: SongModel[] = [
-    { artist: 'Nirvana', title: 'Smells Like Teen Spirit', id: '2', price: 6, releaseDate: new Date('09-24-1991') },
-    { artist: 'Taylor Swift', title: 'Shake It Off', id: '4', price: 7, releaseDate: new Date('08-18-2014') },
+    {
+      artist: 'Nirvana',
+      title: 'Smells Like Teen Spirit',
+      id: '2',
+      price: 6,
+      releaseDate: new Date('09-24-1991'),
+    },
+    {
+      artist: 'Taylor Swift',
+      title: 'Shake It Off',
+      id: '4',
+      price: 7,
+      releaseDate: new Date('08-18-2014'),
+    },
     { artist: 'Adele', title: 'Hello', id: '3', price: 8, releaseDate: new Date('10-23-2015') },
-    { artist: 'Ed Sheeran', title: 'Shape of You', id: '5', price: 9, releaseDate: new Date('01-06-2017') },
-    { artist: 'Billie Eilish', title: 'Bad Guy', id: '6', price: 7, releaseDate: new Date('03-29-2019') },
+    {
+      artist: 'Ed Sheeran',
+      title: 'Shape of You',
+      id: '5',
+      price: 9,
+      releaseDate: new Date('01-06-2017'),
+    },
+    {
+      artist: 'Billie Eilish',
+      title: 'Bad Guy',
+      id: '6',
+      price: 7,
+      releaseDate: new Date('03-29-2019'),
+    },
   ];
 
   it('create an instance', () => {

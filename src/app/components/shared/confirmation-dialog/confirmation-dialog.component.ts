@@ -1,5 +1,12 @@
-import { Component, inject, Inject, Input } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
+import { Component, inject } from '@angular/core';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogContent,
+  MatDialogRef,
+  MatDialogTitle,
+} from '@angular/material/dialog';
 
 interface DialogData {
   title: string;
@@ -7,7 +14,7 @@ interface DialogData {
 }
 
 @Component({
-  selector: 'baf-confirmation-dialog',
+  selector: 'app-confirmation-dialog',
   imports: [MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose],
   templateUrl: './confirmation-dialog.component.html',
   styleUrl: './confirmation-dialog.component.scss',

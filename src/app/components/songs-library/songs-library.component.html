@@ -4,7 +4,9 @@
   <div class="song-list-page__options">
     <ul class="song-list-page__options__list">
       <li class="filter-item">
-        <button class="app-btn" routerLink="./" [queryParams]="{ 'filter-from': '05-09-2024' }">Filter by date</button>
+        <button class="app-btn" routerLink="./" [queryParams]="{ 'filter-from': '05-09-2024' }">
+          Filter by date
+        </button>
       </li>
       @for (item of sortTiles; track $index) {
         <li>
@@ -14,9 +16,18 @@
     </ul>
   </div>
   <ul class="song-list-page__song-list">
-    @for (song of songList | filterSongs: filterOptions.from : filterOptions.until | sortGeneric: 'releaseDate' : 'desc'; track song.id) {
+    @for (
+      song of songList
+        | filterSongs: filterOptions.from : filterOptions.until
+        | sortGeneric: 'releaseDate' : 'desc';
+      track song.id
+    ) {
       <li>
-        <article class="song-card" [song]="song" (delete)="onDelete($event)" (update)="onUpdate($event)"></article>
+        <article
+          class="song-card"
+          [song]="song"
+          (delete)="onDelete($event)"
+          (update)="onUpdate($event)"></article>
       </li>
     }
   </ul>

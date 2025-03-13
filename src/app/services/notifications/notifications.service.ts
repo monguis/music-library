@@ -15,8 +15,6 @@ export interface NotificationMessage {
   providedIn: 'root',
 })
 export class NotificationsService {
-  constructor() {}
-
   pushNotification(notification: NotificationMessage) {
     console.log(`status: ${notification.status} message: ${notification.message}`);
   }

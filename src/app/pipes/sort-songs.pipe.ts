@@ -17,7 +17,9 @@ export class SortGenericPipe implements PipeTransform {
       const ascending = order === 'asc';
 
       if (valueA instanceof Date && valueB instanceof Date) {
-        return ascending ? valueA.getTime() - valueB.getTime() : valueB.getTime() - valueA.getTime();
+        return ascending
+          ? valueA.getTime() - valueB.getTime()
+          : valueB.getTime() - valueA.getTime();
       } else if (typeof valueA === 'string' && typeof valueB === 'string') {
         return ascending ? valueA.localeCompare(valueB) : valueB.localeCompare(valueA);
       } else if (typeof valueA === 'number' && typeof valueB === 'number') {

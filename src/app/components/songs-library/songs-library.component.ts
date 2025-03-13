@@ -7,7 +7,10 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FilterSongPipe } from '../../pipes/filter-songs.pipe';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
-import { MessageStatus, NotificationsService } from '../../services/notifications/notifications.service';
+import {
+  MessageStatus,
+  NotificationsService,
+} from '../../services/notifications/notifications.service';
 import { SortGenericPipe } from '../../pipes/sort-songs.pipe';
 
 interface FilterOptions {

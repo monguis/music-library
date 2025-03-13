@@ -8,9 +8,27 @@ describe('SongsService', () => {
   let songService: SongsService;
   let httpMock: HttpTestingController;
   const MOCK_LIST = [
-    new SongModel({ id: '1', title: 'Blinding Lights', artist: 'The Weeknd', release_date: '2019-11-29', price: 12 }),
-    new SongModel({ id: '2', title: 'Shape of You', artist: 'Ed Sheeran', release_date: '2017-01-06', price: 15 }),
-    new SongModel({ id: '3', title: 'Levitating', artist: 'Dua Lipa', release_date: '2020-03-27', price: 13 }),
+    new SongModel({
+      id: '1',
+      title: 'Blinding Lights',
+      artist: 'The Weeknd',
+      release_date: '2019-11-29',
+      price: 12,
+    }),
+    new SongModel({
+      id: '2',
+      title: 'Shape of You',
+      artist: 'Ed Sheeran',
+      release_date: '2017-01-06',
+      price: 15,
+    }),
+    new SongModel({
+      id: '3',
+      title: 'Levitating',
+      artist: 'Dua Lipa',
+      release_date: '2020-03-27',
+      price: 13,
+    }),
   ];
 
   beforeEach(() => {
@@ -55,7 +73,13 @@ describe('SongsService', () => {
     const initialSong = MOCK_LIST[0];
     songService.addSongToLocalList(initialSong);
 
-    const updatedSong = new SongModel({ id: '1', title: 'Updated Song', artist: 'Artist 1', release_date: '2024-02-01', price: 12 });
+    const updatedSong = new SongModel({
+      id: '1',
+      title: 'Updated Song',
+      artist: 'Artist 1',
+      release_date: '2024-02-01',
+      price: 12,
+    });
 
     const spy = spyOn(songService.songsList$, 'next').and.callThrough();
 
@@ -66,7 +90,13 @@ describe('SongsService', () => {
   });
 
   it('should remove a song from the list', () => {
-    const initialSong = new SongModel({ id: '1', title: 'Song 1', artist: 'Artist 1', release_date: '2024-01-01', price: 10 });
+    const initialSong = new SongModel({
+      id: '1',
+      title: 'Song 1',
+      artist: 'Artist 1',
+      release_date: '2024-01-01',
+      price: 10,
+    });
     songService.addSongToLocalList(initialSong);
 
     const spy = spyOn(songService.songsList$, 'next').and.callThrough();
