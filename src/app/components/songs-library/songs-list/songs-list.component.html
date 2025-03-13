@@ -2,7 +2,7 @@
   @for (
     song of songList
       | filterSongs: filterOptions.from : filterOptions.until
-      | sortSongs: 'releaseDate' : 'desc';
+      | sortSongs: filterOptions.sortby : filterOptions.sortingDesc;
     track song.id
   ) {
     <li>

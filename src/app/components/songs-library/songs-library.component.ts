@@ -9,6 +9,7 @@ import { NotificationsService } from '../../services/notifications/notifications
 import { SongsListComponent } from './songs-list/songs-list.component';
 import { AsyncPipe } from '@angular/common';
 import { SongsInputSectionComponent } from './songs-input-section/songs-input-section.component';
+import { FilterOptions } from '../../models/sorting-options';
 
 @Component({
   selector: 'app-songs-library',
@@ -95,5 +96,9 @@ export class SongsLibraryComponent implements OnInit, OnDestroy {
         );
       },
     });
+  }
+
+  onApplyFilters(event: FilterOptions<SongModel>) {
+    this.filterOptions = event;
   }
 }

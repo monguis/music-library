@@ -8,6 +8,7 @@ import { FilterOptions } from '../../../models/sorting-options';
 import { TitleCasePipe } from '@angular/common';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
+import { SongModel } from '../../../models/song';
 @Component({
   selector: 'app-songs-input-section',
   imports: [
@@ -24,29 +25,35 @@ import { provideNativeDateAdapter } from '@angular/material/core';
   styleUrl: './songs-input-section.component.scss',
 })
 export class SongsInputSectionComponent {
-  @Input({ required: true }) public sortFields!: { title: string; value: string }[];
-  @Output() public apply = new EventEmitter<FilterOptions>();
+  @Output() public apply = new EventEmitter<FilterOptions<SongModel>>();
+  public sortFields = [
+    { title: 'Title', value: 'title' },
+    { title: 'Artist', value: 'Artist' },
+    { title: 'Release Date', value: 'Release Date' },
+    { title: 'ID', value: 'ID' },
+    { title: 'Price', value: 'Price' },
+  ];
 
   public from?: string;
   public until?: string;
   public selectedSortField?: string;
   public isSortingDesc: boolean = false;
 
-  public filterOptions: FilterOptions = {
-    from: this.from,
-    until: this.until,
-    sortby: this.selectedSortField,
-    sortingDesc: this.isSortingDesc,
-  };
-
   emitApply() {
-    const filterOptions: FilterOptions = {
+    const filterOptions: FilterOptions<SongModel> = {
       from: this.from,
       until: this.until,
-      sortby: this.selectedSortField,
+      sortby: this.selectedSortField as keyof SongModel,
       sortingDesc: this.isSortingDesc,
     };
-    console.log(filterOptions);
     this.apply.emit(filterOptions);
+  }
+
+  handleClear() {
+    this.from = '';
+    this.until = '';
+    this.selectedSortField = '';
+    this.isSortingDesc = false;
+    this.apply.emit({});
   }
 }

@@ -48,6 +48,7 @@
       </mat-checkbox>
     </div>
     <div class="songs-input__form__submit-button-section">
+      <button class="app-btn" (click)="handleClear()">Clear</button>
       <button class="app-btn" type="submit" [disabled]="!inputForm.valid">Apply</button>
     </div>
   </form>

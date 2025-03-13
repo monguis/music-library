@@ -2,7 +2,7 @@
   <h2>Song list</h2>
 
   <div class="song-list-page__options">
-    <app-songs-input-section [sortFields]="[{ title: 'Artist', value: 'artist' }]" />
+    <app-songs-input-section (apply)="onApplyFilters($event)" />
     <app-songs-list
       [filterOptions]="filterOptions"
       [songList]="(songList$ | async) ?? []"

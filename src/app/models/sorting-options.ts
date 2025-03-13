@@ -1,6 +1,6 @@
-export interface FilterOptions {
+export interface FilterOptions<T> {
   from?: string;
   until?: string;
-  sortby?: string;
+  sortby?: keyof T;
   sortingDesc?: boolean;
 }

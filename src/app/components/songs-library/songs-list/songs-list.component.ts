@@ -13,7 +13,7 @@ import { FilterOptions } from '../../../models/sorting-options';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SongsListComponent {
-  @Input({ required: true }) public filterOptions!: FilterOptions;
+  @Input({ required: true }) public filterOptions!: FilterOptions<SongModel>;
   @Input({ required: true }) public songList!: SongModel[];
   @Output() private cardDelete = new EventEmitter<string>();
   @Output() private cardUpdate = new EventEmitter<string>();
