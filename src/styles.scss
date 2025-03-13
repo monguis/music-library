@@ -1,12 +1,3 @@
-html,
-body {
-  height: 100%;
-}
-body {
-  margin: 0;
-  font-family: var(--regular-font);
-}
-
 // Colors
 :root {
   --primary-color: #3498db;
@@ -85,4 +76,13 @@ button.app-btn {
   background-color: white;
   border: 2px solid var(--highlight-green-color);
   border-radius: 5px;
+}
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: var(--regular-font);
 }
