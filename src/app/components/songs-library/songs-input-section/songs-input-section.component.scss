@@ -31,7 +31,7 @@
       padding: 0;
       list-style: none;
       flex-grow: 1;
-      text-align: right;
+      justify-content: right;
       gap: 0.5rem;
       & li {
         display: inline;
@@ -62,7 +62,6 @@
       }
 
       &__button-section {
-        text-align: right;
         justify-content: center;
       }
     }

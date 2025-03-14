@@ -1,5 +1,5 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, Output, EventEmitter, ViewChild } from '@angular/core';
+import { FormsModule, NgForm } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -26,6 +26,9 @@ import { SongModel } from '../../../models/song';
 })
 export class SongsInputSectionComponent {
   @Output() public apply = new EventEmitter<FilterOptions<SongModel>>();
+  @Output() public clear = new EventEmitter<null>();
+  @ViewChild('inputForm') form!: NgForm;
+
   public sortFields: { title: string; value: keyof SongModel }[] = [
     { title: 'Title', value: 'title' },
     { title: 'Artist', value: 'artist' },
@@ -34,26 +37,27 @@ export class SongsInputSectionComponent {
     { title: 'Price', value: 'price' },
   ];
 
-  public from?: string;
-  public until?: string;
-  public selectedSortField?: string;
-  public isSortingDesc: boolean = false;
-
   emitApply() {
+    if (!this.form.valid) return;
+
+    const { from, until, sortField, isSortingDesc } = this.form.value;
+
     const filterOptions: FilterOptions<SongModel> = {
-      from: this.from,
-      until: this.until,
-      sortby: this.selectedSortField as keyof SongModel,
-      sortingDesc: this.isSortingDesc,
+      from: from,
+      until: until,
+      sortby: sortField as keyof SongModel,
+      sortingDesc: isSortingDesc,
     };
     this.apply.emit(filterOptions);
   }
 
   handleClear() {
-    this.from = '';
-    this.until = '';
-    this.selectedSortField = '';
-    this.isSortingDesc = false;
-    this.apply.emit({});
+    if (this.isFormEmpty(this.form)) return;
+    this.form.reset();
+    this.clear.emit();
+  }
+
+  isFormEmpty(form: NgForm): boolean {
+    return Object.values(form.value).every(value => value === '' || value == null);
   }
 }

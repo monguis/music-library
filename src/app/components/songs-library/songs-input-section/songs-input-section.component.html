@@ -4,12 +4,7 @@
     <div class="songs-input__form__section for-filters">
       <mat-form-field class="songs-input__form__section__field">
         <mat-label>Filter from</mat-label>
-        <input
-          matInput
-          [matDatepicker]="picker"
-          placeholder="MM/DD/YYYY"
-          [(ngModel)]="from"
-          name="from" />
+        <input matInput [matDatepicker]="picker" ngModel placeholder="MM/DD/YYYY" name="from" />
         <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
@@ -19,10 +14,9 @@
         <input
           matInput
           [matDatepicker]="picker2"
-          [min]="from"
           placeholder="MM/DD/YYYY"
-          [(ngModel)]="until"
           name="until"
+          ngModel
           #untilDpRef="ngModel" />
         <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
         <mat-datepicker #picker2></mat-datepicker>
@@ -34,23 +28,19 @@
     <div class="songs-input__form__section for-sorts">
       <mat-form-field class="songs-input__form__section__field">
         <mat-label>Sort by</mat-label>
-        <mat-select [(ngModel)]="selectedSortField" name="sortField">
-          <mat-option></mat-option>
+        <mat-select ngModel name="sortField">
           @for (field of sortFields; track field) {
             <mat-option [value]="field.value">{{ field.title | titlecase }}</mat-option>
           }
         </mat-select>
       </mat-form-field>
-      <mat-checkbox
-        [(ngModel)]="isSortingDesc"
-        name="isSortingDesc"
-        class="songs-input__form__section__checkbox">
+      <mat-checkbox name="isSortingDesc" ngModel class="songs-input__form__section__checkbox">
         Sort descendently
       </mat-checkbox>
     </div>
     <ul class="songs-input__form__button-section">
       <li>
-        <button class="app-btn" (click)="handleClear()">Clear</button>
+        <button class="app-btn" type="button" (click)="handleClear()">Clear</button>
       </li>
       <li>
         <button class="app-btn" type="submit" [disabled]="!inputForm.valid">Apply</button>
