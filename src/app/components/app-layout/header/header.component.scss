@@ -1,5 +1,4 @@
 @use '../../../../styles.scss' as main;
-@use '@angular/material' as mat;
 
 :host {
   background-color: var(--bg-dark-blue);
@@ -20,9 +19,6 @@
         color: white;
         text-decoration: none;
       }
-      &.mobile {
-        display: none;
-      }
     }
     &__title {
       font-size: 1.5rem;
@@ -32,6 +28,27 @@
         text-decoration: none;
       }
     }
+
+    &__mobile-menu-button {
+      display: none;
+    }
+  }
+
+  @media (max-width: 968px) {
+    .menu-nav {
+      &__header-button-list.desktop {
+        display: none;
+      }
+
+      &__mobile-menu-button {
+        display: block;
+        color: white;
+      }
+    }
+
+    .menu-nav__header-button-list.desktop {
+      display: none;
+    }
   }
   @media (max-width: 600px) {
     .menu-nav {
@@ -39,18 +56,14 @@
         display: none;
       }
 
-      &__mobile-menu > * {
-        @include mat.menu-overrides(
-          (
-            item-label-text-color: orange,
-            item-icon-color: red,
-          )
-        );
-      }
       &__mobile-menu-button {
         display: block;
         color: white;
       }
+    }
+
+    .menu-nav__header-button-list.desktop {
+      display: none;
     }
   }
 }
