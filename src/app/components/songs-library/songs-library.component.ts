@@ -105,6 +105,6 @@ export class SongsLibraryComponent implements OnInit, OnDestroy {
 
   onClearFilters() {
     this.filterOptions = {};
-    this.notificationService.pushWarningAlert('List options have been cleared');
+    this.notificationService.pushWarningAlert('List has been reset');
   }
 }
