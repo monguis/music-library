@@ -4,6 +4,7 @@ import { NotificationsService } from '../../../services/notifications/notificati
 import { ToastrService } from 'ngx-toastr';
 import { of } from 'rxjs';
 import { By } from '@angular/platform-browser';
+import { MessageStatus, NotificationMessage } from '../../../models/notification';
 
 describe('NotificationsComponent', () => {
   let component: NotificationsComponent;
@@ -15,12 +16,7 @@ describe('NotificationsComponent', () => {
     const notificationsServiceSpy = jasmine.createSpyObj('NotificationsService', [
       'notifications$',
     ]);
-    const toastrServiceSpy = jasmine.createSpyObj('ToastrService', [
-      'success',
-      'error',
-      'info',
-      'warning',
-    ]);
+    const toastrServiceSpy = jasmine.createSpyObj('ToastrService', ['success', 'error', 'warning']);
 
     await TestBed.configureTestingModule({
       declarations: [NotificationsComponent],
@@ -47,7 +43,11 @@ describe('NotificationsComponent', () => {
 
   describe('ngOnInit', () => {
     it('should subscribe to notifications service and call toastr on receiving notification', () => {
-      const mockNotification = { status: 'success', message: 'Test Message', title: 'Test Title' };
+      const mockNotification: NotificationMessage = {
+        status: MessageStatus.SUCCESS,
+        message: 'Test Message',
+        title: 'Test Title',
+      };
 
       notificationsService.notifications$.next(mockNotification);
 
@@ -55,23 +55,21 @@ describe('NotificationsComponent', () => {
     });
 
     it('should handle different notification statuses', () => {
-      const mockInfoNotification = { status: 'info', message: 'Information', title: 'Info Title' };
+      const mockInfoNotification = {
+        status: MessageStatus.INFO,
+        message: 'Information',
+        title: 'Info Title',
+      };
       const mockWarningNotification = {
-        status: 'warning',
+        status: MessageStatus.WARNING,
         message: 'Warning',
         title: 'Warning Title',
       };
       const mockErrorNotification = {
-        status: 'error',
+        status: MessageStatus.ERROR,
         message: 'Error occurred',
         title: 'Error Title',
       };
-
-      notificationsService.notifications$.next(mockInfoNotification);
-      expect(toastr.info).toHaveBeenCalledWith(
-        mockInfoNotification.message,
-        mockInfoNotification.title
-      );
 
       notificationsService.notifications$.next(mockWarningNotification);
       expect(toastr.warning).toHaveBeenCalledWith(
@@ -81,6 +79,12 @@ describe('NotificationsComponent', () => {
 
       notificationsService.notifications$.next(mockErrorNotification);
       expect(toastr.error).toHaveBeenCalledWith(
+        mockErrorNotification.message,
+        mockErrorNotification.title
+      );
+
+      notificationsService.notifications$.next(mockInfoNotification);
+      expect(toastr.info).toHaveBeenCalledWith(
         mockErrorNotification.message,
         mockErrorNotification.title
       );

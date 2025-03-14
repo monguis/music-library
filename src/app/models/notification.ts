@@ -8,4 +8,5 @@ export const enum MessageStatus {
   ERROR = 'error',
   WARNING = 'warning',
   SUCCESS = 'success',
+  INFO = 'info',
 }
