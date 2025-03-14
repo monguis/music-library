@@ -9,8 +9,8 @@ export class FilterSongPipe implements PipeTransform {
   transform(songs: SongModel[], releaseFrom?: string, releaseUntil?: string): SongModel[] {
     if (!songs) return [];
 
-    const from = stringToDate(releaseFrom);
-    const until = stringToDate(releaseUntil);
+    const from = stringToDate(releaseFrom ?? '');
+    const until = stringToDate(releaseUntil ?? '');
 
     if (!from && !until) return songs;
 
