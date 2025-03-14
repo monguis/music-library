@@ -2,9 +2,18 @@
   <h2>Song list</h2>
 
   <app-songs-input-section (apply)="onApplyFilters($event)" (clear)="onClearFilters()" />
-  <app-songs-list
-    [filterOptions]="filterOptions"
-    [songList]="(songList$ | async) ?? []"
-    (cardUpdate)="onUpdate($event)"
-    (cardDelete)="onDelete($event)" />
+  @if (songList$ | async; as list) {
+    @if (list.length > 0) {
+      <app-songs-list
+        [filterOptions]="filterOptions"
+        [songList]="(songList$ | async) ?? []"
+        (cardUpdate)="onUpdate($event)"
+        (cardDelete)="onDelete($event)" />
+    } @else {
+      <div class="retry-message-wrapper">
+        <p><strong>Count not find songs</strong></p>
+        <button class="app-btn" (click)="loadSongs()">Retry</button>
+      </div>
+    }
+  }
 </section>

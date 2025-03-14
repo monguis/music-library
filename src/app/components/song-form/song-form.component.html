@@ -1,5 +1,5 @@
 <div class="form-wrapper">
-  <h2>{{ mode === 'create' ? 'Add a new song to your list' : 'Add a new song to your list' }}</h2>
+  <h2>{{ mode === 'create' ? 'Add a new song to your list' : 'Update song' }}</h2>
   <form [formGroup]="songForm" (ngSubmit)="submitForm()" class="songs-form">
     <mat-form-field class="songs-form__field full-width">
       <mat-label>Title</mat-label>
@@ -50,7 +50,7 @@
         <mat-error>{{ getPriceFieldErrorMessage() }}</mat-error>
       }
     </mat-form-field>
-    <ul class="actions-list">
+    <ul class="songs-form__actions-list">
       <button class="app-btn danger" (click)="onCancel()" type="button">Cancel</button>
       <button class="app-btn" type="submit" [disabled]="isFormSubmitDisabled()">
         {{ mode }} Song

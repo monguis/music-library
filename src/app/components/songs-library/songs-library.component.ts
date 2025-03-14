@@ -32,6 +32,10 @@ export class SongsLibraryComponent implements OnInit {
   ngOnInit(): void {
     this.songList$ = this.songsService.songsList$;
 
+    this.loadSongs();
+  }
+
+  loadSongs() {
     this.songsService.getAllSongs().subscribe({
       next: songs => {
         this.songsService.assingSongsToList(songs);
