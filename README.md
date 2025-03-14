@@ -1,5 +1,7 @@
 # Music Library
 
+Link: [Music Library](https://monguis.github.io/music-library/)
+
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.1.8.
 
 ### Requirements:
@@ -7,44 +9,43 @@ This project was generated using [Angular CLI](https://github.com/angular/angula
 - Node.js@ version 20+
 - Angular CLI@ version 19+ (optional)
 - Docker (optional)
+- Google Chrome (optional for tests)
 
 ### Local setup
 
 #### Steps:
 
-In the base directory, run:
+1. In the base directory, run:
 
 ```
 npm install
 ```
 
-then if Angular CLI is installed run:
+2. If Angular CLI is installed, run:
 
 ```
 ng serve
 ```
 
-otherwise run:
+Otherwise, run:
 
 ```
 npm run start
 ```
 
-Project should be running at `localhost:4200`. The application will automatically reload whenever you modify any of the source files.
-
-### Build Docker image
+3. The project should be running at http://localhost:4200. The application will automatically reload whenever you modify any of the source files.
 
 ### Building
 
 To build the project run:
 
-Angular CLI
+Using Angular CLI
 
 ```bash
 ng build
 ```
 
-Node
+Using Node
 
 ```bash
 npm run build
@@ -62,21 +63,39 @@ Angular CLI
 ng test
 ```
 
-Nodeº
+Node
 
 ```bash
 npm run test
 ```
 
-## Decisions(temporal name)
+A chrome window should open, showing unit tests results.
+
+## Project Overview
+
+### Project Philosophy
+
+My focus was to create components that could be reusable in the future for different purposes. I strived to create a simple experience that could be easily maintained and expanded. I focused on segregating functions as much as possible to improve testability. I followed Angular conventions and ensured that the code is readable and understandable.
 
 ### General project structure
 
-The project is a simple page application that allows the user to update a songs list at will. Such list is stored in a remote server that Music library app fetches from. The app is structured to have a main nav header with a home button on the left and 2 route links on the right; home and add new song, and a main content section that will display the content based on the current accessed route. Embedded to the main app structure there is a notification component that can be triggered across the application to notify state changes to users.
+Music Library is a single-page application (SPA) that allows users to manage a song list. The list is stored on a remote server and fetched by the application.
 
-I used Material UI to get components that would have taken me a long time to implement. I did not use material to accomplished UI responsiveness since this would not demonstrate my CSS abilities. I chose to go with services for state management as a centralized solution such as NgRx seemed overkill for this application. I dediced to go with a remote server as it is fairly easy to mock using external services.
+#### UI & Navigation
 
-For simplicity, the app is deployed using github pages. The api endpoint is exposed as gh pages only supports static files. I included a Dockerfile that creates a container which could hide the api using ngnix if needed. The config file used to configure nginx is saved in the nginx folder. so if the app needed to hide the API we could do so by making minor tweaks and deploying somewhere else.
+The app consists of:
+
+- A main navigation header: Contains a home button on the left and links for "Home" and "Add New Song" on the right.
+- A main content section: Displays content based on the current route.
+- A notification component: Used across the application to inform users of state changes.
+
+#### Design & Implementation Choices
+
+- **Material UI**: Used for pre-built components to save development time. However, custom CSS was used for responsiveness.
+- **State Management**: Services are used instead of a centralized solution like NgRx, which would be overkill for this application.
+- **NGX-Toaster**: Used to create eye appealing notifications to inform the user of any update across the app.
+- **Remote Server**: The app fetches and updates data from a remote server, as it can be easily created using [mockapi.io](https://mockapi.io/).
+- **Deployment**: For simplicity, The app is deployed using GitHub Pages. A action is in place so that time new code is push to **main**, we deploy. Since github pages only supports static files, the backend api endpoint is exposed as gh pages only supports static files. A Dockerfile is included to allow running the app in an Nginx container that could be configure to proxy call and hide the API if needed.
 
 ### Routes and Components
 
@@ -92,68 +111,96 @@ The app features 2 main services: Song Service and Notifications Service. They r
 
 #### SongsService
 
-SongService has 2 main responsibilities, backend communication and songs state management and distribution. It features 2 behaviorSubjects:
+**Responsible for:**
 
-- songsList$: This is the list that the entire app uses as reference for the current songs.
-- loading$: Notifies the app if the services is waiting for an operation to be completed, usually http requests.
+- Backend communication
+- Managing song state and distributing data across components
 
-The service methods can be segregated in two groups, http request and internal state handlers. This logic was separated to separate concerns. Each component using this service is responsible of using this methods correctly, as each component might need to react to actions in different ways.
+It includes two BehaviorSubjects:
 
-**Methods**
+- songsList$: The central reference list for all songs.
+- loading$: Tracks ongoing operations (e.g., HTTP requests).
 
-{to fill}
+Methods are divided into:
+
+- HTTP requests (fetch, update, delete operations)
+- Internal state handlers (managing local song state)
+
+Each component using this service is responsible for handling actions appropriately, that way, componets can set up their own behavior accordingly.
+
+#### NotificationsService
+
+Handles notifications across the application, providing success, warning, info, and error alerts. With this components don't need to allocate space to display updates. It also means easier testing as we just use one component to notify everywhere.
 
 ### Components
 
-As any angular app, Music Library is broken down in components, which follow this structure:
-
 #### Songs Library
 
-This component is used as the home page landing component. This component responsibility is to communicate with the songsService and route the user to the right location based on events.
+This is the main component displayed on the home page. It functions as the parent component for the song list and the song options input components and acts as a bridge between children and songsService. This component is responsive to pass the state as needed so that other components don't have access to it, preventing unexpected mutations. It is also responsible of listening events from children and act accordingly.
 
-It features a set of buttons for sorting and filtering which trigger events that are sent to the songs list component to sort or filter the list. It also listens events emitted by the songs list to respond accordingly. I decided to go with this approach to seggregate the service communication in just one component.
+It:
 
-When a user updates, it redirects the user to `/update/<selected id>` which will render the song form component. If user deletes, a dialog will come up to confirm such action. Then the user will be notified on delete success and the list will be updated. If user failed to delete a message will be prompted.
+- Communicates with SongsService.
+- Routes users based on actions (e.g., navigating to update a song).
+- Features sorting and filtering controls that interact with SongListComponent.
+- Listens for events from SongListComponent and responds accordingly.
+- Redirects users to /update/:id when updating a song.
+- Displays a confirmation dialog before deleting a song.
 
-#### Songs Library/ Song List
+#### Songs Input
 
-This component sorts and filters the provided song list based on input. Modifications on the rendered list do not mutate the state, preventing any clean up work. Mutations are executed using custom pipes which will reorganize the collection based on input. This feature needs to be controlled externally, this makes the component much easier to test and allows parent component to trigger side effects on list update. The change strategy for this component is onPush, improving performance as we will just update is the input changes, allowing the custom pipes to remain pure and while being more performant.
+It features a set of buttons for sorting and filtering which trigger events that are sent to the songs library component. This means that the list is segregated from the list options that provide input to sort the list. I did it this way to allow the list to be more reusable as it might be used for different purposes. It also aligs with the single responsibility principle as the list just displays songs based on input and the input component creates such input.
 
-Usually tables are better for sorting and filtering but lists tend to be better for ui responsiveness and since that is a major requirement, I opted for a list. When a song card event is triggered, the song list registers such event and emits it. that way parent componetn can decide what to do with such event. Since the component is not as nested and allows for reusability I opted for this approach instead of passing methods from the song service.
+#### Song List
 
-#### Songs Library/ Song Card
+- Sorts and filters songs based on input without mutating state.
+- Uses Angular pipes for sorting/filtering to ensure immutability.
+- Employs OnPush change detection for improved performance.
+- Uses a list-based UI instead of a table to optimize responsiveness.
+- Emits events for parent components to handle user interactions.
 
-Represents a song. It shows all fields to the user. This component also features 2 buttons, update and delete, that emit events that can be listened by the parent component, making it more testable and pure.
+#### Song Card
 
-#### Shared folder
+- Displays song details.
+- Features "Update" and "Delete" buttons, which emit events for parent components to handle.
 
-This folder hosts any component that can be used across any other component but is not limited by the called functionality.
+#### Song Form
 
-#### Shared/ confirmation-dialog
+- Used in both `/create` and `/update/:id` routes.
+- Create Mode: Allows users to add a new song.
 
-This dialog can be opened by any component and used at will. It is very helpful to ask for confirmation from the user. The dialog takes a title and a message to display to the user and a cancel and a confirm buton. When the user confirms or cancels, the parent component has the responsibility to respond accordingly.
+- Update Mode:
+  - Verifies the song ID exists in the backend.
+  - Redirects users to home if the song is invalid.
+  - Prompts a confirmation dialog before submitting updates.
 
-#### Songs form
+### Shared Components
 
-This is the component rendered on `/create` and `/update/:id`. The component has the ability to act in different ways based on mode `"Create" | "update"`. Such mode is assign on render by checking the current url path.
+#### Confirmation Dialog
 
-If the form is on `create` mode, it will show a create related title, and will create a song if the form is valid and the user submits.
+- A reusable confirmation modal that any component can open.
+- Accepts a title and message.
+- Provides "Cancel" and "Confirm" buttons, with the parent component handling the response.
 
-On `update`, the form first verifies if the song id exists on the backend, mainly to prevent errors and verify that we have the latest song version. If the song is invalid, the form will redirect the user to the home page and will be notified that the song is not valid using the notification service. If it is valid, the user can submit the form but it will be prompted a dialog asking for confirmation since the user is updating an existing record.
+### App Layout
 
-#### AppLayout folder
+#### Header
 
-This folder contains components that give structure to the applocation. Such components are used outside of the `router-outlet` meaning that they are not affected by route changes. We feature a header component, but more importantly the notifications component which listens the notificaitonService for updates to show to the user.
+Provides navigation links and branding.
 
-#### AppLayout folder/ notifications
+#### Notifications Component
 
-This component communicates with the notificationService so that when a component pushes a notification, it can respond accordingly.
+Listens to NotificationsService and displays messages accordingly.
+
+#### main element
+
+This element contains the router outlet for the application to function.
 
 ### Models
 
 #### SongModel
 
-The song model is the class that we use to present a song to the user. Since the data we save on the backend is different than what we use internally we have a SongDto interface that can be converted back and forth. That way, if something from the api changed, it would not break the entire application and will make easier to update the code as the mapping logic would be segregated in one location.
+Represents the data structure used in the application. Since the data we save on the backend is different than what we use internally we have a SongDto interface that can be converted back and forth. That way, if something from the api changed, it would not break the entire application and will make easier to update the code as the mapping logic would be segregated in one location. We also rely on this conversion make sure that dates are shown on local time for the user but saved on UTC on the backend.
 
 ##### Structure
 
@@ -191,4 +238,16 @@ This interceptor console.errors out any error that can happen. It does not use n
 
 #### Force Fail in probability
 
-As required, this interceptors makes 1 out of 5 request fail as 500s. This is the more reliable and segregated way to mock failures, though they can still happen as Music library connects to a remote server.
+As required, the app randomly fails 1 in 5 update song requests with a 500 error to simulate real-world scenarios. I opted for an interceptor since it does not mess with the actual code base.
+
+### Future Improvements
+
+- Implement caching mechanisms to reduce redundant API calls.
+- Add pagination for better scalability.
+- Improve accessibility.
+- Expand unit and integration tests to cover edge cases.
+- Implement retry mechanism for http requests (could be an interceptor).
+
+### Conclusion
+
+This project provides a fully functional music library application with sorting, filtering, and CRUD operations. It balances simplicity and scalability, using Angular best practices while keeping the architecture flexible for future enhancements.
