@@ -49,62 +49,64 @@ describe('SongsService', () => {
     expect(songService).toBeTruthy();
   });
 
-  it('loads a new list into the service', () => {
-    const spy = spyOn(songService.songsList$, 'next').and.callThrough();
+  describe('internal state', () => {
+    it('loads a new list into the service', () => {
+      const spy = spyOn(songService.songsList$, 'next').and.callThrough();
 
-    songService.assingSongsToList(MOCK_LIST);
+      songService.assingSongsToList(MOCK_LIST);
 
-    expect(songService.songsList$.getValue()).toEqual(MOCK_LIST);
-    expect(spy).toHaveBeenCalledWith(MOCK_LIST);
-  });
-
-  it('should add a new song to the list', () => {
-    const newSong = MOCK_LIST[0];
-
-    const spy = spyOn(songService.songsList$, 'next').and.callThrough();
-
-    songService.addSongToLocalList(newSong);
-
-    expect(songService.songsList$.getValue()).toEqual([newSong]);
-    expect(spy).toHaveBeenCalledWith([newSong]);
-  });
-
-  it('should update an existing song in the list', () => {
-    const initialSong = MOCK_LIST[0];
-    songService.addSongToLocalList(initialSong);
-
-    const updatedSong = new SongModel({
-      id: '1',
-      title: 'Updated Song',
-      artist: 'Artist 1',
-      release_date: '2024-02-01',
-      price: 12,
+      expect(songService.songsList$.getValue()).toEqual(MOCK_LIST);
+      expect(spy).toHaveBeenCalledWith(MOCK_LIST);
     });
 
-    const spy = spyOn(songService.songsList$, 'next').and.callThrough();
+    it('should add a new song to the list', () => {
+      const newSong = MOCK_LIST[0];
 
-    songService.updateLocalList('1', updatedSong);
+      const spy = spyOn(songService.songsList$, 'next').and.callThrough();
 
-    expect(songService.songsList$.getValue()).toEqual([updatedSong]);
-    expect(spy).toHaveBeenCalledWith([updatedSong]);
-  });
+      songService.addSongToLocalList(newSong);
 
-  it('should remove a song from the list', () => {
-    const initialSong = new SongModel({
-      id: '1',
-      title: 'Song 1',
-      artist: 'Artist 1',
-      release_date: '2024-01-01',
-      price: 10,
+      expect(songService.songsList$.getValue()).toEqual([newSong]);
+      expect(spy).toHaveBeenCalledWith([newSong]);
     });
-    songService.addSongToLocalList(initialSong);
 
-    const spy = spyOn(songService.songsList$, 'next').and.callThrough();
+    it('should update an existing song in the list', () => {
+      const initialSong = MOCK_LIST[0];
+      songService.addSongToLocalList(initialSong);
 
-    songService.removeSongFromLocalList('1');
+      const updatedSong = new SongModel({
+        id: '1',
+        title: 'Updated Song',
+        artist: 'Artist 1',
+        release_date: '2024-02-01',
+        price: 12,
+      });
 
-    expect(songService.songsList$.getValue()).toEqual([]);
-    expect(spy).toHaveBeenCalledWith([]);
+      const spy = spyOn(songService.songsList$, 'next').and.callThrough();
+
+      songService.updateLocalList('1', updatedSong);
+
+      expect(songService.songsList$.getValue()).toEqual([updatedSong]);
+      expect(spy).toHaveBeenCalledWith([updatedSong]);
+    });
+
+    it('should remove a song from the list', () => {
+      const initialSong = new SongModel({
+        id: '1',
+        title: 'Song 1',
+        artist: 'Artist 1',
+        release_date: '2024-01-01',
+        price: 10,
+      });
+      songService.addSongToLocalList(initialSong);
+
+      const spy = spyOn(songService.songsList$, 'next').and.callThrough();
+
+      songService.removeSongFromLocalList('1');
+
+      expect(songService.songsList$.getValue()).toEqual([]);
+      expect(spy).toHaveBeenCalledWith([]);
+    });
   });
 
   it('fetches songs from the API and converts the dtos to models', () => {

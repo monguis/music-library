@@ -2,8 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NotificationsComponent } from './notifications.component';
 import { NotificationsService } from '../../../services/notifications/notifications.service';
 import { ToastrService } from 'ngx-toastr';
-import { of } from 'rxjs';
-import { By } from '@angular/platform-browser';
+import { Subject } from 'rxjs';
 import { MessageStatus, NotificationMessage } from '../../../models/notification';
 
 describe('NotificationsComponent', () => {
@@ -11,15 +10,24 @@ describe('NotificationsComponent', () => {
   let fixture: ComponentFixture<NotificationsComponent>;
   let notificationsService: jasmine.SpyObj<NotificationsService>;
   let toastr: jasmine.SpyObj<ToastrService>;
+  let notificationsSubject: Subject<NotificationMessage>;
 
   beforeEach(async () => {
-    const notificationsServiceSpy = jasmine.createSpyObj('NotificationsService', [
-      'notifications$',
+    notificationsSubject = new Subject<NotificationMessage>();
+
+    const notificationsServiceSpy = jasmine.createSpyObj('NotificationsService', [], {
+      notifications$: notificationsSubject.asObservable(),
+    });
+
+    const toastrServiceSpy = jasmine.createSpyObj('ToastrService', [
+      'success',
+      'error',
+      'warning',
+      'info',
     ]);
-    const toastrServiceSpy = jasmine.createSpyObj('ToastrService', ['success', 'error', 'warning']);
 
     await TestBed.configureTestingModule({
-      declarations: [NotificationsComponent],
+      imports: [NotificationsComponent],
       providers: [
         { provide: NotificationsService, useValue: notificationsServiceSpy },
         { provide: ToastrService, useValue: toastrServiceSpy },
@@ -32,72 +40,50 @@ describe('NotificationsComponent', () => {
       NotificationsService
     ) as jasmine.SpyObj<NotificationsService>;
     toastr = TestBed.inject(ToastrService) as jasmine.SpyObj<ToastrService>;
+
     fixture.detectChanges();
   });
 
   afterEach(() => {
-    if (component.notificationSub) {
-      component.notificationSub.unsubscribe();
-    }
+    component.notificationSub?.unsubscribe();
   });
 
   describe('ngOnInit', () => {
-    it('should subscribe to notifications service and call toastr on receiving notification', () => {
+    it('should subscribe to notifications$ and invoke toastr with correct method', () => {
       const mockNotification: NotificationMessage = {
-        status: MessageStatus.SUCCESS,
-        message: 'Test Message',
-        title: 'Test Title',
+        status: MessageStatus.SUCCESS, // Should match the toastr method name
+        message: 'Test notification message',
+        title: 'Test Notification Title',
       };
 
-      notificationsService.notifications$.next(mockNotification);
+      notificationsSubject.next(mockNotification); // Simulate a new notification
 
       expect(toastr.success).toHaveBeenCalledWith(mockNotification.message, mockNotification.title);
     });
 
-    it('should handle different notification statuses', () => {
-      const mockInfoNotification = {
-        status: MessageStatus.INFO,
-        message: 'Information',
-        title: 'Info Title',
-      };
-      const mockWarningNotification = {
-        status: MessageStatus.WARNING,
-        message: 'Warning',
-        title: 'Warning Title',
-      };
-      const mockErrorNotification = {
-        status: MessageStatus.ERROR,
-        message: 'Error occurred',
-        title: 'Error Title',
-      };
+    it('should correctly handle different notification statuses', () => {
+      const testCases: NotificationMessage[] = [
+        { status: MessageStatus.SUCCESS, message: 'Success Message', title: 'Success' },
+        { status: MessageStatus.ERROR, message: 'Error Message', title: 'Error' },
+        { status: MessageStatus.WARNING, message: 'Warning Message', title: 'Warning' },
+        { status: MessageStatus.INFO, message: 'Info Message', title: 'Info' },
+      ];
 
-      notificationsService.notifications$.next(mockWarningNotification);
-      expect(toastr.warning).toHaveBeenCalledWith(
-        mockWarningNotification.message,
-        mockWarningNotification.title
-      );
-
-      notificationsService.notifications$.next(mockErrorNotification);
-      expect(toastr.error).toHaveBeenCalledWith(
-        mockErrorNotification.message,
-        mockErrorNotification.title
-      );
-
-      notificationsService.notifications$.next(mockInfoNotification);
-      expect(toastr.info).toHaveBeenCalledWith(
-        mockErrorNotification.message,
-        mockErrorNotification.title
-      );
+      testCases.forEach(mockNotification => {
+        notificationsSubject.next(mockNotification);
+        expect(toastr[mockNotification.status]).toHaveBeenCalledWith(
+          mockNotification.message,
+          mockNotification.title
+        );
+      });
     });
   });
 
   describe('ngOnDestroy', () => {
-    it('should unsubscribe from the notifications service', () => {
-      const unsubscribeSpy = spyOn(component.notificationSub!, 'unsubscribe');
-
+    it('should unsubscribe from notifications$ when destroyed', () => {
+      spyOn(component.notificationSub!, 'unsubscribe');
       component.ngOnDestroy();
-
-      expect(unsubscribeSpy).toHaveBeenCalled();
+      expect(component.notificationSub!.unsubscribe).toHaveBeenCalled();
     });
   });
 });
