@@ -37,14 +37,7 @@ export class SongFormComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.route.snapshot.url[0].path === 'update') {
-      this.mode = 'update';
-      this.songSnapshot = this.songsService.getSongToUpdate();
-      this.currentSongId = this.route.snapshot.url[1].path;
-
-      if (!this.songSnapshot && !this.currentSongId) {
-        this.notificationService.pushWarningAlert(`Song could not be found`);
-        this.router.navigate(['/']);
-      }
+      this.handleFormInitOnUpdate()
     }
 
     this.songForm = this.fb.group({
@@ -65,6 +58,17 @@ export class SongFormComponent implements OnInit, OnDestroy {
         [Validators.required, Validators.min(0.01)],
       ],
     });
+  }
+
+  handleFormInitOnUpdate(){
+    this.mode = 'update';
+    this.songSnapshot = this.songsService.getSongToUpdate();
+    this.currentSongId = this.route.snapshot.url[1].path;
+
+    if (!this.songSnapshot && !this.currentSongId) {
+      this.notificationService.pushWarningAlert(`Song could not be found`);
+      this.router.navigate(['/']);
+    }
   }
 
   ngOnDestroy() {
