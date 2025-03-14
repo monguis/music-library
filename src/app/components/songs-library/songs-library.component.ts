@@ -17,29 +17,20 @@ import { FilterOptions } from '../../models/sorting-options';
   templateUrl: './songs-library.component.html',
   styleUrl: './songs-library.component.scss',
 })
-export class SongsLibraryComponent implements OnInit, OnDestroy {
+export class SongsLibraryComponent implements OnInit {
   public songList$?: BehaviorSubject<SongModel[]>;
   public sortTiles: string[] = [];
   public filterOptions: any = {};
-  private paramsSubcription?: Subscription;
 
   constructor(
     private songsService: SongsService,
     private notificationService: NotificationsService,
-    private route: ActivatedRoute,
     private readonly dialog: MatDialog,
     private router: Router
   ) {}
 
   ngOnInit(): void {
     this.songList$ = this.songsService.songsList$;
-
-    this.paramsSubcription = this.route.queryParams.subscribe(params => {
-      this.filterOptions = {
-        from: params['filter-from'],
-        until: params['filter-until'],
-      };
-    });
 
     this.songsService.getAllSongs().subscribe({
       next: songs => {
@@ -51,10 +42,6 @@ export class SongsLibraryComponent implements OnInit, OnDestroy {
         );
       },
     });
-  }
-
-  ngOnDestroy(): void {
-    this.paramsSubcription?.unsubscribe();
   }
 
   onDelete(id: string) {
