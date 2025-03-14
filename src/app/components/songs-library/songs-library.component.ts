@@ -1,8 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SongsService } from '../../services/songs/songs.service';
 import { SongModel } from '../../models/song';
-import { BehaviorSubject, Subscription } from 'rxjs';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
+import { Router, RouterModule } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
 import { NotificationsService } from '../../services/notifications/notifications.service';
@@ -54,20 +54,22 @@ export class SongsLibraryComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result === 'confirm') {
-        this.songsService.deleteSong(id).subscribe({
-          next: () => {
-            this.songsService.removeSongFromLocalList(id);
-            this.notificationService.pushSuccessAlert(
-              `Song ID: ${id} has been deleted successfully`
-            );
-          },
-          error: err => {
-            this.notificationService.pushErrorAlert(
-              `Song ID: ${id} could not be deleted: ${err?.message ?? 'Unknown error'}`
-            );
-          },
-        });
+        this.handleModalDeleteConfirm(id);
       }
+    });
+  }
+
+  handleModalDeleteConfirm(id: string) {
+    this.songsService.deleteSong(id).subscribe({
+      next: () => {
+        this.songsService.removeSongFromLocalList(id);
+        this.notificationService.pushSuccessAlert(`Song ID: ${id} has been deleted successfully`);
+      },
+      error: err => {
+        this.notificationService.pushErrorAlert(
+          `Song ID: ${id} could not be deleted: ${err?.message ?? 'Unknown error'}`
+        );
+      },
     });
   }
 

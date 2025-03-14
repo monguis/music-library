@@ -79,10 +79,11 @@ export class SongsService {
     );
   }
 
-  deleteSong(id: string): Observable<void> {
+  deleteSong(id: string): Observable<SongModel> {
     this.loading$.next(true);
-    return this.http
-      .delete<void>(`${this.songsApiURL}/${id}`)
-      .pipe(finalize(() => this.loading$.next(false)));
+    return this.http.delete<SongDto>(`${this.songsApiURL}/${id}`).pipe(
+      map(songDto => new SongModel(songDto)),
+      finalize(() => this.loading$.next(false))
+    );
   }
 }

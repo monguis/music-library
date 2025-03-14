@@ -1,12 +1,10 @@
 <section class="song-list-page">
   <h2>Song list</h2>
 
-  <div class="song-list-page__options">
-    <app-songs-input-section (apply)="onApplyFilters($event)" (clear)="onClearFilters()" />
-    <app-songs-list
-      [filterOptions]="filterOptions"
-      [songList]="(songList$ | async) ?? []"
-      (cardUpdate)="onUpdate($event)"
-      (cardDelete)="onDelete($event)" />
-  </div>
+  <app-songs-input-section (apply)="onApplyFilters($event)" (clear)="onClearFilters()" />
+  <app-songs-list
+    [filterOptions]="filterOptions"
+    [songList]="(songList$ | async) ?? []"
+    (cardUpdate)="onUpdate($event)"
+    (cardDelete)="onDelete($event)" />
 </section>
