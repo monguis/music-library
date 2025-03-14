@@ -7,7 +7,6 @@ import { Subscription } from 'rxjs';
   selector: 'app-notifications',
   imports: [],
   templateUrl: './notifications.component.html',
-  styleUrl: './notifications.component.scss',
 })
 export class NotificationsComponent implements OnInit, OnDestroy {
   constructor(
