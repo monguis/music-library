@@ -1,10 +1,15 @@
 .songs-input {
+  &__title {
+    font-weight: 600;
+    font-size: 1.3rem;
+  }
   &__form {
     height: 4rem;
     display: flex;
     gap: 2rem;
     height: 5rem;
     align-items: center;
+
     &__section {
       position: relative;
       width: 40%;
@@ -21,9 +26,45 @@
       }
     }
 
-    &__submit-button-section {
+    &__button-section {
+      display: flex;
+      padding: 0;
+      list-style: none;
       flex-grow: 1;
       text-align: right;
+      gap: 0.5rem;
+      & li {
+        display: inline;
+      }
+    }
+  }
+
+  @media (max-width: 600px) {
+    &__title {
+      margin: 0.5rem;
+    }
+    &__form {
+      display: block;
+      height: unset;
+      &__section {
+        width: 100%;
+        gap: 1rem;
+
+        &__field {
+          margin-top: 1rem;
+          max-width: 50%;
+        }
+
+        &__checkbox {
+          flex-grow: 1;
+          flex-shrink: 0;
+        }
+      }
+
+      &__button-section {
+        text-align: right;
+        justify-content: center;
+      }
     }
   }
 }

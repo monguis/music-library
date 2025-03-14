@@ -94,6 +94,9 @@ body {
   margin: 0;
   font-family: var(--regular-font);
 }
+body * {
+  font-family: var(--regular-font);
+}
 
 @mixin main-content-size {
   max-width: var(--content-max-width-lg);

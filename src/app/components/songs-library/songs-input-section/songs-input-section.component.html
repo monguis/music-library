@@ -1,4 +1,5 @@
 <div class="songs-input">
+  <p class="songs-input__title">List options</p>
   <form #inputForm="ngForm" class="songs-input__form" (ngSubmit)="emitApply()">
     <div class="songs-input__form__section for-filters">
       <mat-form-field class="songs-input__form__section__field">
@@ -47,9 +48,13 @@
         Sort descendently
       </mat-checkbox>
     </div>
-    <div class="songs-input__form__submit-button-section">
-      <button class="app-btn" (click)="handleClear()">Clear</button>
-      <button class="app-btn" type="submit" [disabled]="!inputForm.valid">Apply</button>
-    </div>
+    <ul class="songs-input__form__button-section">
+      <li>
+        <button class="app-btn" (click)="handleClear()">Clear</button>
+      </li>
+      <li>
+        <button class="app-btn" type="submit" [disabled]="!inputForm.valid">Apply</button>
+      </li>
+    </ul>
   </form>
 </div>
