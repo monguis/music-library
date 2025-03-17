@@ -9,6 +9,10 @@
         [songList]="(songList$ | async) ?? []"
         (cardUpdate)="onUpdate($event)"
         (cardDelete)="onDelete($event)" />
+    } @else if (loadingList$ | async) {
+      <div class="loading-message-wrapper">
+        <mat-spinner class="loading-message-wrapper__spinner" />
+      </div>
     } @else {
       <div class="retry-message-wrapper">
         <p><strong>Count not find songs</strong></p>

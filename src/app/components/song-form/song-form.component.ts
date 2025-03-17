@@ -37,7 +37,7 @@ export class SongFormComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.route.snapshot.url[0].path === 'update') {
-      this.handleFormInitOnUpdate()
+      this.handleFormInitOnUpdate();
     }
 
     this.songForm = this.fb.group({
@@ -60,7 +60,7 @@ export class SongFormComponent implements OnInit, OnDestroy {
     });
   }
 
-  handleFormInitOnUpdate(){
+  handleFormInitOnUpdate() {
     this.mode = 'update';
     this.songSnapshot = this.songsService.getSongToUpdate();
     this.currentSongId = this.route.snapshot.url[1].path;
