@@ -8,9 +8,8 @@ describe('SongsInputSectionComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SongsInputSectionComponent]
-    })
-    .compileComponents();
+      imports: [SongsInputSectionComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(SongsInputSectionComponent);
     component = fixture.componentInstance;
