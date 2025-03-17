@@ -9,16 +9,24 @@ import { NotificationsService } from '../../services/notifications/notifications
 import { SongsListComponent } from './songs-list/songs-list.component';
 import { AsyncPipe } from '@angular/common';
 import { SongsInputSectionComponent } from './songs-input-section/songs-input-section.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FilterOptions } from '../../models/sorting-options';
 
 @Component({
   selector: 'app-songs-library',
-  imports: [RouterModule, SongsListComponent, AsyncPipe, SongsInputSectionComponent],
+  imports: [
+    RouterModule,
+    SongsListComponent,
+    AsyncPipe,
+    SongsInputSectionComponent,
+    MatProgressSpinnerModule,
+  ],
   templateUrl: './songs-library.component.html',
   styleUrl: './songs-library.component.scss',
 })
 export class SongsLibraryComponent implements OnInit {
   public songList$?: BehaviorSubject<SongModel[]>;
+  public loadingList$?: BehaviorSubject<boolean>;
   public sortTiles: string[] = [];
   public filterOptions: any = {};
 
@@ -31,7 +39,7 @@ export class SongsLibraryComponent implements OnInit {
 
   ngOnInit(): void {
     this.songList$ = this.songsService.songsList$;
-
+    this.loadingList$ = this.songsService.loading$;
     this.loadSongs();
   }
 
