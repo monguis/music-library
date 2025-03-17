@@ -52,8 +52,14 @@
     </mat-form-field>
     <ul class="songs-form__actions-list">
       <button class="app-btn danger" (click)="onCancel()" type="button">Cancel</button>
-      <button class="app-btn" type="submit" [disabled]="isFormSubmitDisabled()">
-        {{ mode }} Song
+      <button
+        class="app-btn"
+        type="submit"
+        [disabled]="isFormSubmitDisabled(loadingSongs$ | async)">
+        @if (loadingSongs$ | async) {
+          <span><mat-spinner diameter="20" class="loading-spinner" /></span>&nbsp;
+        }
+        {{ mode | titlecase }} Song
       </button>
     </ul>
   </form>

@@ -10,12 +10,23 @@ import { SongsService } from '../../services/songs/songs.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
 import { NotificationsService } from '../../services/notifications/notifications.service';
+import { BehaviorSubject } from 'rxjs';
+import { AsyncPipe, TitleCasePipe } from '@angular/common';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 type songFormMode = 'create' | 'update';
 
 @Component({
   selector: 'app-song-form',
-  imports: [MatFormFieldModule, MatInputModule, MatDatepickerModule, ReactiveFormsModule],
+  imports: [
+    MatFormFieldModule,
+    MatInputModule,
+    MatDatepickerModule,
+    ReactiveFormsModule,
+    AsyncPipe,
+    TitleCasePipe,
+    MatProgressSpinnerModule,
+  ],
   templateUrl: './song-form.component.html',
   providers: [provideNativeDateAdapter()],
   styleUrl: './song-form.component.scss',
@@ -24,6 +35,7 @@ export class SongFormComponent implements OnInit, OnDestroy {
   public songForm!: FormGroup;
   public mode: songFormMode = 'create';
   public songSnapshot: SongModel | null = null;
+  public loadingSongs$?: BehaviorSubject<boolean>;
   private currentSongId = '';
 
   constructor(
@@ -36,6 +48,7 @@ export class SongFormComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.loadingSongs$ = this.songsService.loading$;
     if (this.route.snapshot.url[0].path === 'update') {
       this.handleFormInitOnUpdate();
     }
@@ -112,8 +125,8 @@ export class SongFormComponent implements OnInit, OnDestroy {
     return this.songSnapshot?.equals(currentValues);
   }
 
-  isFormSubmitDisabled() {
-    return !this.songForm.valid || this.getFormIsEqualToSnapshot();
+  isFormSubmitDisabled(isLoading: boolean | null) {
+    return !this.songForm.valid || this.getFormIsEqualToSnapshot() || isLoading;
   }
 
   onCancel() {

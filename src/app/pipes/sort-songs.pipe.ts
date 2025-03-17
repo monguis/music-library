@@ -5,7 +5,7 @@ import { SongModel } from '../models/song';
   name: 'sortSongs',
 })
 export class SortSongsPipe implements PipeTransform {
-  transform(array: SongModel[], field?: keyof SongModel, descending: boolean = true): SongModel[] {
+  transform(array: SongModel[], field?: keyof SongModel, descending = true): SongModel[] {
     if (!array) return [];
     if (!array || !field) return array;
     return [...array].sort((a, b) => {
