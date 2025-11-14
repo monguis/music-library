@@ -3,4 +3,12 @@
     display: flex;
     gap: 0.5rem;
   }
+
+  & .title {
+    font-family: var(--headline-font);
+  }
+
+  & .content {
+    font-family: var(--regular-font);
+  }
 }
