@@ -1,10 +1,12 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { SongModel } from '../../../models/song';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'article[songCard]',
-  imports: [DatePipe, CurrencyPipe],
+  imports: [DatePipe, CurrencyPipe, MatIconModule, MatButtonModule],
   templateUrl: './song-card.component.html',
   styleUrl: './song-card.component.scss',
 })
