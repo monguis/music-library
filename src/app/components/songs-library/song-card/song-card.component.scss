@@ -6,16 +6,26 @@
 
 :host {
   border-left: 5px solid var(--primary-color);
-  margin-bottom: 5px;
+  border-radius: 4px;
   padding: 1rem;
   display: flex;
   box-shadow: 1px 1px 3px #555555;
-  margin-bottom: 0.75rem;
+  margin-bottom: 1rem;
+  transition: 0.15s all ease-in-out;
+
+  &:hover {
+    box-shadow: 2px 3px 5px #555555;
+  }
   .info {
-    width: 75%;
+    flex: 1 0;
     display: flex;
+    flex-wrap: nowrap;
+    gap: 1rem;
+    &__song-picture {
+      flex: 0 1;
+    }
     &__song-info {
-      width: 75%;
+      flex: 1 0;
       &__title {
         margin: 0;
         font-size: 1.5rem;
@@ -36,7 +46,7 @@
     }
   }
   .actions {
-    width: 25%;
+    flex: 0 0;
     &__list {
       list-style: none;
       text-align: end;
@@ -45,6 +55,7 @@
       align-items: center;
       height: 100%;
       gap: 0.5rem;
+      padding: 0;
 
       & li {
         margin-bottom: 0.25rem;

@@ -16,10 +16,27 @@
 <div class="actions">
   <ul class="actions__list">
     <li>
-      <button data-test-id="update-button" class="app-btn" (click)="handleUpdate()">Update</button>
+      <button
+        data-test-id="update-button"
+        (click)="handleUpdate()"
+        class="mat-app-btn"
+        extended
+        mat-button
+        aria-label="Example icon button with a menu icon">
+        <mat-icon>edit</mat-icon>
+        Edit
+      </button>
     </li>
+
     <li>
-      <button data-test-id="delete-button" class="app-btn danger" (click)="handleDelete()">
+      <button
+        data-test-id="delete-button"
+        (click)="handleDelete()"
+        class="mat-app-btn danger"
+        extended
+        mat-button
+        aria-label="Example icon button with a menu icon">
+        <mat-icon>delete</mat-icon>
         Delete
       </button>
     </li>

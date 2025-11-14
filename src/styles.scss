@@ -3,6 +3,7 @@
   --primary-color: #3498db;
   --highlight-green-color: #00793a;
   --highlight-red-color: #8b0000;
+  --highlight-red-color-shade: #e9131315;
   --bg-dark-blue: #1a2944;
   --main-shadow: 0 3px 6px #00000029;
 }
@@ -107,5 +108,17 @@ body * {
     padding: var(--content-padding-sm);
     max-width: var(--content-max-width-sm);
     margin: var(--content-margin-sm);
+  }
+}
+
+button.mat-app-btn.mdc-button {
+  font-size: 1rem;
+  &.danger {
+    color: var(--highlight-red-color);
+    &:hover,
+    &:active,
+    &:focus {
+      background-color: var(--highlight-red-color-shade);
+    }
   }
 }
