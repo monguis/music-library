@@ -12,7 +12,7 @@
 :root {
   --content-max-width-lg: 80vw;
   --content-padding-lg: 0 1.5rem;
-  --content-margin-lg: 0 6%;
+  --content-margin-lg: 0 auto;
   --content-padding-sm: 0 0.5rem;
   --content-max-width-sm: 100%;
   --content-margin-sm: 0 0.5rem;
@@ -121,4 +121,8 @@ button.mat-app-btn.mdc-button {
       background-color: var(--highlight-red-color-shade);
     }
   }
+}
+
+.mat-mdc-option.mdc-list-item {
+  font-family: var(--regular-font);
 }
