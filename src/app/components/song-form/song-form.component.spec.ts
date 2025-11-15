@@ -313,7 +313,8 @@ describe('SongFormComponent', () => {
   });
 
   it('should disable submit button if form is invalid', () => {
-    expect(component.isFormSubmitDisabled()).toBeTrue();
+    const mockSongsLoading = false;
+    expect(component.isFormSubmitDisabled(mockSongsLoading)).toBeTrue();
   });
 
   describe('On Destroy behavior', () => {
