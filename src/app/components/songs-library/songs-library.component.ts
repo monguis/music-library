@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SongsService } from '../../services/songs/songs.service';
-import { SongModel } from '../../models/song';
+import { SongModel } from '../../models';
 import { BehaviorSubject } from 'rxjs';
 import { Router, RouterModule } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
@@ -10,7 +10,7 @@ import { SongsListComponent } from './songs-list/songs-list.component';
 import { AsyncPipe } from '@angular/common';
 import { SongsInputSectionComponent } from './songs-input-section/songs-input-section.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { FilterOptions } from '../../models/sorting-options';
+import { SongsPaginationComponent } from './songs-pagination/songs-pagination.component';
 
 @Component({
   selector: 'app-songs-library',
@@ -20,6 +20,7 @@ import { FilterOptions } from '../../models/sorting-options';
     AsyncPipe,
     SongsInputSectionComponent,
     MatProgressSpinnerModule,
+    SongsPaginationComponent,
   ],
   templateUrl: './songs-library.component.html',
   styleUrl: './songs-library.component.scss',
@@ -45,9 +46,6 @@ export class SongsLibraryComponent implements OnInit {
 
   loadSongs() {
     this.songsService.getAllSongs().subscribe({
-      next: songs => {
-        this.songsService.assingSongsToList(songs);
-      },
       error: err => {
         this.notificationService.pushErrorAlert(
           `Songs list could not be fetched: ${err?.message ?? 'Unknown error'}`
@@ -97,15 +95,5 @@ export class SongsLibraryComponent implements OnInit {
         );
       },
     });
-  }
-
-  onApplyFilters(event: FilterOptions<SongModel>) {
-    this.filterOptions = event;
-    this.notificationService.pushSuccessAlert('List options have been applied');
-  }
-
-  onClearFilters() {
-    this.filterOptions = {};
-    this.notificationService.pushWarningAlert('List has been reset');
   }
 }

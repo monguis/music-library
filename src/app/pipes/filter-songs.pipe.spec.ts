@@ -1,4 +1,4 @@
-import { SongModel } from '../models/song';
+import { SongModel } from '../models';
 import { FilterSongPipe } from './filter-songs.pipe';
 
 describe('FiltersongPipe', () => {

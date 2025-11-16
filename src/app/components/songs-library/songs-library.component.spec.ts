@@ -7,8 +7,7 @@ import { Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { SongModel } from '../../models/song';
-import { FilterOptions } from '../../models/sorting-options';
+import { SongModel, FilterOptions } from '../../models';
 
 describe('SongsLibraryComponent', () => {
   let component: SongsLibraryComponent;
@@ -179,22 +178,15 @@ describe('SongsLibraryComponent', () => {
     });
   });
 
-  describe('on list option updates behavior', () => {
-    it('applies filters and show success message', () => {
-      const filterOptions = { sortBy: 'name', order: 'asc' } as FilterOptions<SongModel>;
-      component.onApplyFilters(filterOptions);
+  // describe('on list option updates behavior', () => {
+  //   it('applies filters and show success message', () => {
+  //     const filterOptions = { sortBy: 'name', order: 'asc' } as FilterOptions<SongModel>;
+  //     component.onApplyFilters(filterOptions);
 
-      expect(component.filterOptions).toEqual(filterOptions);
-      expect(notificationServiceMock.pushSuccessAlert).toHaveBeenCalledWith(
-        'List options have been applied'
-      );
-    });
-
-    it('clears filters and show warning message', () => {
-      component.onClearFilters();
-
-      expect(component.filterOptions).toEqual({});
-      expect(notificationServiceMock.pushWarningAlert).toHaveBeenCalledWith('List has been reset');
-    });
-  });
+  //     expect(component.filterOptions).toEqual(filterOptions);
+  //     expect(notificationServiceMock.pushSuccessAlert).toHaveBeenCalledWith(
+  //       'List options have been applied'
+  //     );
+  //   });
+  // });
 });

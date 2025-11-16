@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { SongsService } from './songs.service';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { SongModel } from '../../models/song';
+import { SongModel } from '../../models';
 import { provideHttpClient } from '@angular/common/http';
 
 describe('SongsService', () => {
@@ -50,15 +50,6 @@ describe('SongsService', () => {
   });
 
   describe('internal state', () => {
-    it('loads a new list into the service', () => {
-      const spy = spyOn(songService.songsList$, 'next').and.callThrough();
-
-      songService.assingSongsToList(MOCK_LIST);
-
-      expect(songService.songsList$.getValue()).toEqual(MOCK_LIST);
-      expect(spy).toHaveBeenCalledWith(MOCK_LIST);
-    });
-
     it('should add a new song to the list', () => {
       const newSong = MOCK_LIST[0];
 

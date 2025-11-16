@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { SongModel } from '../models/song';
+import { SongModel } from '../models';
 
 @Pipe({
   name: 'sortSongs',

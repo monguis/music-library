@@ -7,7 +7,7 @@ import { NotificationsService } from '../../services/notifications/notifications
 import { MatDialog } from '@angular/material/dialog';
 import { of, throwError } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SongModel } from '../../models/song';
+import { SongModel } from '../../models';
 import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
 
 describe('SongFormComponent', () => {

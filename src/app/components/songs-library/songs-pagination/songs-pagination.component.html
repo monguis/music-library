@@ -1,0 +1,21 @@
+<section>
+  <p>showing X - X</p>
+  <p>page 1 2 3 4 5</p>
+  <select [(ngModel)]="perPage" (ngModelChange)="setPerPageSize($event)">
+    <option value="5">5</option>
+    <option value="10">10</option>
+    <option value="25">25</option>
+    <option value="50">50</option>
+  </select>
+  <div>
+    <button [disabled]="!canGoToPage(0)" (click)="setPage(0)">first</button>
+    <button [disabled]="!canGoToPage(currentPage - 1)" (click)="setPage(currentPage - 1)">
+      prev
+    </button>
+    <p>{{ currentPage! + 1 }}</p>
+    <button [disabled]="!canGoToPage(currentPage + 1)" (click)="setPage(currentPage + 1)">
+      next
+    </button>
+    <button [disabled]="!canGoToPage(currentPage)" (click)="setPage(currentPage)">last</button>
+  </div>
+</section>

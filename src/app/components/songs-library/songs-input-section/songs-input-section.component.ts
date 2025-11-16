@@ -4,11 +4,12 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { FilterOptions } from '../../../models/sorting-options';
+import { FilterOptions, SongModel } from '../../../models';
 import { TitleCasePipe } from '@angular/common';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
-import { SongModel } from '../../../models/song';
+import { SongsService } from '../../../services/songs/songs.service';
+import { NotificationsService } from '../../../services/notifications/notifications.service';
 @Component({
   selector: 'app-songs-input-section',
   imports: [
@@ -25,9 +26,13 @@ import { SongModel } from '../../../models/song';
   styleUrl: './songs-input-section.component.scss',
 })
 export class SongsInputSectionComponent {
-  @Output() public apply = new EventEmitter<FilterOptions<SongModel>>();
   @Output() public clear = new EventEmitter<null>();
   @ViewChild('inputForm') form!: NgForm;
+
+  constructor(
+    private songsService: SongsService,
+    private notificationService: NotificationsService
+  ) {}
 
   public sortFields: { title: string; value: keyof SongModel }[] = [
     { title: 'Title', value: 'title' },
@@ -48,13 +53,16 @@ export class SongsInputSectionComponent {
       sortby: sortField as keyof SongModel,
       sortingDesc: isSortingDesc,
     };
-    this.apply.emit(filterOptions);
+
+    this.songsService.filterLocalList(filterOptions);
+    this.notificationService.pushSuccessAlert('List options have been applied');
   }
 
   handleClear() {
     if (this.isFormEmpty(this.form)) return;
     this.form.reset();
-    this.clear.emit();
+    this.songsService.filterLocalList();
+    this.notificationService.pushWarningAlert('List has been reset');
   }
 
   isFormEmpty(form: NgForm): boolean {

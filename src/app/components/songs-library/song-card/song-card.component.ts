@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CurrencyPipe, DatePipe } from '@angular/common';
-import { SongModel } from '../../../models/song';
+import { SongModel } from '../../../models';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 

@@ -1,5 +1,5 @@
 import { SortSongsPipe } from './sort-songs.pipe';
-import { SongModel } from '../models/song';
+import { SongModel } from '../models';
 
 describe('SortSongsPipe', () => {
   let pipe: SortSongsPipe;

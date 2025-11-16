@@ -1,7 +1,8 @@
 <section class="song-list-page">
   <h2>Song list</h2>
 
-  <app-songs-input-section (apply)="onApplyFilters($event)" (clear)="onClearFilters()" />
+  <app-songs-input-section />
+  <app-songs-pagination />
   @if (songList$ | async; as list) {
     @if (list.length > 0) {
       <app-songs-list

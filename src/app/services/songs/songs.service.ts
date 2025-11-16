@@ -1,42 +1,109 @@
 import { Injectable } from '@angular/core';
-import { SongModel, SongDto } from '../../models/song';
-import { BehaviorSubject, finalize, map, Observable } from 'rxjs';
+import { SongModel, SongDto, FilterOptions, PaginationInfo } from '../../models';
+import { BehaviorSubject, finalize, map, Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
+import { filterByDate, sortedere } from '../../helpers';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SongsService {
   private songsApiURL = environment.songsApiUrl + '/songs';
-  private songList: SongModel[] = [];
+  private filteredSortedSongs: SongModel[] = [];
   private songToUpdate?: SongModel | null = null;
+  private allSongs: SongModel[] = [];
+  private paginationInfo: PaginationInfo = {
+    page: 0,
+    perPage: 25,
+  };
+
   public loading$ = new BehaviorSubject<boolean>(false);
-  public songsList$ = new BehaviorSubject<SongModel[]>(this.songList);
+  public songsList$ = new BehaviorSubject<SongModel[]>(this.allSongs);
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    this.songsList$.subscribe(t => console.log(t));
+  }
 
-  assingSongsToList(newSongs: SongModel[]) {
-    this.songList = newSongs;
-    this.songsList$.next(newSongs);
+  get getPaginationInfo() {
+    return { ...this.paginationInfo };
   }
 
   addSongToLocalList(newSong: SongModel) {
-    const newList = [...this.songList, newSong];
-    this.songList = newList;
-    this.songsList$.next(newList);
+    const newList = [...this.allSongs, newSong];
+    this.allSongs = newList;
+    this.updatePagination({ page: 0 });
+  }
+
+  updatePagination(newPagination: PaginationInfo) {
+    const constructedPageInfo = {
+      ...this.paginationInfo,
+      ...newPagination,
+    };
+    const lastPage = Math.floor(this.filteredSortedSongs.length / constructedPageInfo.perPage!);
+
+    this.paginationInfo = { ...constructedPageInfo, lastPage };
+
+    this.handlePagination();
+  }
+
+  goToPage(page: number) {
+    if (!this.canGoToPage(page)) return;
+    this.updatePagination({ page });
+  }
+
+  setPerPageSize(perPage: number) {
+    this.updatePagination({ page: 0, perPage });
+  }
+
+  canGoToPage(page: number) {
+    const { lastPage } = this.paginationInfo;
+    return page >= 0 && page <= lastPage!;
   }
 
   updateLocalList(id: string, newSong: SongModel) {
-    const newList = this.songList.map(song => (song.id === id ? newSong : song));
-    this.songList = newList;
-    this.songsList$.next(newList);
+    const newList = this.allSongs.map(song => (song.id === id ? newSong : song));
+    this.allSongs = newList;
+    this.updatePagination({ page: 0 });
+  }
+
+  filterLocalList(filterOptions?: FilterOptions<SongModel>) {
+    let dateFiltered: SongModel[] = [];
+    if (!filterOptions) {
+      this.updatePagination({ page: 0 });
+      return;
+    }
+
+    const { from, until, sortby, sortingDesc } = filterOptions;
+    if (from || until) {
+      dateFiltered = filterByDate(this.allSongs, from, until);
+    } else {
+      dateFiltered = this.allSongs.slice();
+    }
+
+    let sorted;
+    if (sortingDesc || sortby) {
+      sorted = sortedere(dateFiltered, sortby, sortingDesc);
+    } else {
+      sorted = dateFiltered;
+    }
+
+    this.filteredSortedSongs = sorted;
+    this.updatePagination({ page: 0 });
+  }
+
+  handlePagination() {
+    const pageOffset = this.paginationInfo.perPage! * this.paginationInfo.page!;
+
+    this.songsList$.next(
+      this.filteredSortedSongs.slice(pageOffset, pageOffset + this.paginationInfo.perPage!)
+    );
   }
 
   removeSongFromLocalList(id: string) {
-    const newList = this.songList.filter(song => song.id !== id);
-    this.songList = newList;
-    this.songsList$.next(newList);
+    const newList = this.allSongs.filter(song => song.id !== id);
+    this.allSongs = newList;
+    this.updatePagination({ page: 0 });
   }
 
   getSongToUpdate() {
@@ -47,6 +114,12 @@ export class SongsService {
     this.loading$.next(true);
     return this.http.get<SongDto[]>(this.songsApiURL).pipe(
       map(songDtos => songDtos.map(dto => new SongModel(dto))),
+      tap(songs => {
+        this.allSongs = songs;
+        this.filteredSortedSongs = songs;
+        this.updatePagination({ page: 0 });
+        this.filterLocalList();
+      }),
       finalize(() => this.loading$.next(false))
     );
   }

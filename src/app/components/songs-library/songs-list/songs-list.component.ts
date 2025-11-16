@@ -1,13 +1,10 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { FilterSongPipe } from '../../../pipes/filter-songs.pipe';
-import { SortSongsPipe } from '../../../pipes/sort-songs.pipe';
-import { SongModel } from '../../../models/song';
+import { SongModel, FilterOptions } from '../../../models';
 import { SongCardComponent } from '../song-card/song-card.component';
-import { FilterOptions } from '../../../models/sorting-options';
 
 @Component({
   selector: 'app-songs-list',
-  imports: [FilterSongPipe, SortSongsPipe, SongCardComponent],
+  imports: [SongCardComponent],
   templateUrl: './songs-list.component.html',
   styleUrl: './songs-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

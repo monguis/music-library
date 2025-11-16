@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SongCardComponent } from './song-card.component';
-import { SongModel } from '../../../models/song';
+import { SongModel } from '../../../models';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 
 describe('SongCardComponent', () => {

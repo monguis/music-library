@@ -1,10 +1,5 @@
 <ul class="song-list">
-  @for (
-    song of songList
-      | filterSongs: filterOptions.from : filterOptions.until
-      | sortSongs: filterOptions.sortby : filterOptions.sortingDesc;
-    track song.id
-  ) {
+  @for (song of songList; track song.id) {
     <li>
       <article
         [song]="song"
