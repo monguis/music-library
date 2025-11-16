@@ -177,16 +177,4 @@ describe('SongsLibraryComponent', () => {
       );
     });
   });
-
-  // describe('on list option updates behavior', () => {
-  //   it('applies filters and show success message', () => {
-  //     const filterOptions = { sortBy: 'name', order: 'asc' } as FilterOptions<SongModel>;
-  //     component.onApplyFilters(filterOptions);
-
-  //     expect(component.filterOptions).toEqual(filterOptions);
-  //     expect(notificationServiceMock.pushSuccessAlert).toHaveBeenCalledWith(
-  //       'List options have been applied'
-  //     );
-  //   });
-  // });
 });

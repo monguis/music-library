@@ -32,7 +32,7 @@ export class SongsService {
   addSongToLocalList(newSong: SongModel) {
     const newList = [...this.allSongs, newSong];
     this.allSongs = newList;
-    this.updatePagination({ page: 0 });
+    this.filterLocalList();
   }
 
   updatePagination(newPagination: PaginationInfo) {
@@ -64,12 +64,13 @@ export class SongsService {
   updateLocalList(id: string, newSong: SongModel) {
     const newList = this.allSongs.map(song => (song.id === id ? newSong : song));
     this.allSongs = newList;
-    this.updatePagination({ page: 0 });
+    this.filterLocalList();
   }
 
   filterLocalList(filterOptions?: FilterOptions<SongModel>) {
     let dateFiltered: SongModel[] = [];
     if (!filterOptions) {
+      this.filteredSortedSongs = this.allSongs;
       this.updatePagination({ page: 0 });
       return;
     }
@@ -103,7 +104,7 @@ export class SongsService {
   removeSongFromLocalList(id: string) {
     const newList = this.allSongs.filter(song => song.id !== id);
     this.allSongs = newList;
-    this.updatePagination({ page: 0 });
+    this.filterLocalList();
   }
 
   getSongToUpdate() {

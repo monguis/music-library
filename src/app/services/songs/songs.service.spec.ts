@@ -57,8 +57,8 @@ describe('SongsService', () => {
 
       songService.addSongToLocalList(newSong);
 
-      expect(songService.songsList$.getValue()).toEqual([newSong]);
       expect(spy).toHaveBeenCalledWith([newSong]);
+      expect(songService.songsList$.getValue()).toEqual([newSong]);
     });
 
     it('should update an existing song in the list', () => {
