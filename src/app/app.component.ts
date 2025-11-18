@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { HeaderComponent } from './components/app-layout/header/header.component';
-import { NotificationsComponent } from './components/app-layout/notifications/notifications.component';
+import { HeaderComponent, NotificationsComponent } from '@app/components/app-layout';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({

@@ -3,7 +3,7 @@
 :host {
   background-color: var(--bg-dark-blue);
   .menu-nav {
-    line-height: 1rem;
+    line-height: 1.3rem;
     display: flex;
     align-items: center;
     max-width: var(--content-max-width-lg);
@@ -16,13 +16,44 @@
       gap: 1rem;
       list-style: none;
       li > a {
-        color: white;
+        color: #d9e1f2;
+        font-size: 1rem;
+        position: relative;
         text-decoration: none;
+
+        &::before {
+          content: '';
+          position: absolute;
+          left: 0;
+          bottom: 0;
+          height: 2px;
+          width: 0%;
+          background: white;
+          transition: width 0.25s ease-in-out;
+        }
+
+        &:hover {
+          color: white;
+          &::before {
+            width: 100%;
+            left: unset;
+            right: 0;
+          }
+        }
+
+        &.active {
+          font-weight: 600;
+          color: #fff;
+          border-bottom: 2px solid #4ea3ff;
+          padding-bottom: 3px;
+        }
       }
     }
     &__title {
-      font-size: 1.5rem;
-      font-weight: bold;
+      font-size: 1.6rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      margin: 0;
       & > a {
         color: white;
         text-decoration: none;

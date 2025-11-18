@@ -1,10 +1,9 @@
 import { Component, Input } from '@angular/core';
 import { CurrencyPipe, DatePipe } from '@angular/common';
-import { SongModel } from '../../../models/song';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { SongsService } from '../../../services/songs/songs.service';
-import { NotificationsService } from '../../../services/notifications/notifications.service';
+import { NotificationsService, SongsService } from '@app/services';
+import { SongModel } from '@app/models';
 import { Router, RouterModule } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';

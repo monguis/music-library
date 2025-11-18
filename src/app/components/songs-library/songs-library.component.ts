@@ -1,16 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { SongsService } from '../../services/songs/songs.service';
-import { SongModel } from '../../models/song';
 import { BehaviorSubject } from 'rxjs';
 import { Router, RouterModule } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
-import { NotificationsService } from '../../services/notifications/notifications.service';
-import { SongsListComponent } from './songs-list/songs-list.component';
 import { AsyncPipe } from '@angular/common';
-import { SongsInputSectionComponent } from './songs-input-section/songs-input-section.component';
+import { SongsInputSectionComponent, SongsListComponent } from '@app/components/songs-library';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { FilterOptions } from '../../models/sorting-options';
+import { FilterOptions, SongModel } from '@app/models';
+import { SongsService, NotificationsService } from '@app/services';
 
 @Component({
   selector: 'app-songs-library',

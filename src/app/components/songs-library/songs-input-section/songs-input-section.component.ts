@@ -4,11 +4,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { FilterOptions } from '../../../models/sorting-options';
 import { TitleCasePipe } from '@angular/common';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
-import { SongModel } from '../../../models/song';
+import { SongModel, FilterOptions } from '@app/models';
 @Component({
   selector: 'app-songs-input-section',
   imports: [

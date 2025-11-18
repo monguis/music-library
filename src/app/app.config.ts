@@ -3,8 +3,7 @@ import { provideRouter } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 
 import { routes } from './app.routes';
-import { httpErrorHandler } from './interceptors/http-error-handler-interceptor';
-import { httpForceError } from './interceptors/http-force-error-interceptor';
+import { httpErrorHandler, httpForceError } from '@app/interceptors';
 import { provideToastr } from 'ngx-toastr';
 import { provideAnimations } from '@angular/platform-browser/animations';
 
