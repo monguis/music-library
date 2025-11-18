@@ -3,7 +3,7 @@ import { SongCardComponent } from './song-card.component';
 import { SongModel } from '../../../models/song';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
-import { Router, RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { NotificationsService } from '../../../services/notifications/notifications.service';

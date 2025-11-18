@@ -7,11 +7,9 @@ import {
   Input,
   Output,
 } from '@angular/core';
-import { FilterSongPipe } from '../../../pipes/filter-songs.pipe';
-import { SortSongsPipe } from '../../../pipes/sort-songs.pipe';
-import { SongModel } from '../../../models/song';
-import { SongCardComponent } from '../song-card/song-card.component';
-import { FilterOptions } from '../../../models/sorting-options';
+import { FilterSongPipe, SortSongsPipe } from '@app/pipes';
+import { SongModel, FilterOptions } from '@app/models';
+import { SongCardComponent } from '@app/components/songs-library';
 
 @Component({
   selector: 'app-songs-list',

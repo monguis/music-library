@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { NotificationsService } from '../../../services/notifications/notifications.service';
+import { NotificationsService } from '@app/services';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 
