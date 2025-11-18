@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { SongsLibraryComponent } from '@app/components/songs-library';
+import { SongsLibraryComponent } from '@app/components/songs-library/songs-library.component';
 import { NonFoundComponent } from './components/non-found/non-found.component';
 
 export const routes: Routes = [
