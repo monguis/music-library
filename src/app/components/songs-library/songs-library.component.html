@@ -3,13 +3,10 @@
 
   <app-songs-input-section (apply)="onApplyFilters($event)" (clear)="onClearFilters()" />
   @if (songList$ | async; as list) {
+    @let loading = loadingList$ | async;
     @if (list.length > 0) {
-      <app-songs-list
-        [filterOptions]="filterOptions"
-        [songList]="(songList$ | async) ?? []"
-        (cardUpdate)="onUpdate($event)"
-        (cardDelete)="onDelete($event)" />
-    } @else if (loadingList$ | async) {
+      <app-songs-list [filterOptions]="filterOptions" [songList]="list" />
+    } @else if (loading) {
       <div class="loading-message-wrapper">
         <mat-spinner class="loading-message-wrapper__spinner" />
       </div>

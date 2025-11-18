@@ -1,16 +1,7 @@
 <ul class="song-list">
-  @for (
-    song of songList
-      | filterSongs: filterOptions.from : filterOptions.until
-      | sortSongs: filterOptions.sortby : filterOptions.sortingDesc;
-    track song.id
-  ) {
+  @for (song of filteredSongs(); track song.id) {
     <li>
-      <article
-        [song]="song"
-        songCard
-        (delete)="onDelete($event)"
-        (update)="onUpdate($event)"></article>
+      <article [song]="song" songCard></article>
     </li>
   }
 </ul>

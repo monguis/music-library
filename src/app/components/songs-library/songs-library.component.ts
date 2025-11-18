@@ -56,49 +56,6 @@ export class SongsLibraryComponent implements OnInit {
     });
   }
 
-  onDelete(id: string) {
-    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      data: {
-        title: 'You are about to delete a Song.',
-        message: 'Do you want to continue?',
-      },
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result === 'confirm') {
-        this.handleModalDeleteConfirm(id);
-      }
-    });
-  }
-
-  handleModalDeleteConfirm(id: string) {
-    this.songsService.deleteSong(id).subscribe({
-      next: () => {
-        this.songsService.removeSongFromLocalList(id);
-        this.notificationService.pushSuccessAlert(`Song ID: ${id} has been deleted successfully`);
-      },
-      error: err => {
-        this.notificationService.pushErrorAlert(
-          `Song ID: ${id} could not be deleted: ${err?.message ?? 'Unknown error'}`
-        );
-      },
-    });
-  }
-
-  onUpdate(id: string) {
-    this.songsService.getSong(id).subscribe({
-      next: song => {
-        this.songsService.setSongForEdit(song);
-        this.router.navigate(['update', id]);
-      },
-      error: err => {
-        this.notificationService.pushErrorAlert(
-          `Song ID: ${id} could not be found in server: ${err?.message ?? 'Unknown error'}`
-        );
-      },
-    });
-  }
-
   onApplyFilters(event: FilterOptions<SongModel>) {
     this.filterOptions = event;
     this.notificationService.pushSuccessAlert('List options have been applied');
