@@ -257,14 +257,17 @@ This project provides a fully functional music library application with sorting,
 This project meets the requirements given, however it is not extensible as I would desired. I decided to have another look and update some basic updated to improve extensability.
 
 **Updated CSS Styles**
+
 I made a few style updates to make the site a little more pleasant.
 
 **SongCardComponent**
+
 This component originally emited events that other components could listen to and handle accordingly. This was meant to provide usability to the component. However it could create unnecessary input/output wiring issues when using the component on deeper places.
 
 Since it is very likely that this componet will always be part of the songs-list component, I decided to move the handling logic inside the component instead, sacrificing reusability for other purposes but providing a more consise implementation. I move tests accordingly.
 
 **SongsListComponent**
+
 This component originally relied on template pipes to filter and sort songs based on the input criteria. Since the component uses the OnPush change detection strategy, those pipes were only re-evaluated when the component’s inputs changed. This works correctly and efficiently, but it isn’t very extensible because the filtering and sorting logic is tied directly to template pipes.
 
 To improve flexibility, I replaced the traditional @Input() bindings with signal-based inputs and moved the filtering and sorting logic into a computed() signal inside the component. The behavior remains the same — the output list is recalculated only when inputs change — but the logic is now centralized, easier to extend, easier to test, and no longer dependent on template pipes. I decided to keep the functions as pipe as they are well tested and can be use in other components.
